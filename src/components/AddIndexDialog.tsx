@@ -1,4 +1,3 @@
-// --- filepath: src/components/AddIndexDialog.tsx
 import React, { useState } from "react";
 import { AssetCategory } from "../types";
 
@@ -40,7 +39,7 @@ export default function AddIndexDialog({ onAdd }: Props) {
   return (
     <div>
       {open ? (
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 max-w-xl">
+        <div className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700">
           <h3 className="text-lg font-semibold mb-2">Neuen Index anlegen</h3>
           <div className="grid gap-3">
             <label className="grid gap-1">
@@ -49,7 +48,7 @@ export default function AddIndexDialog({ onAdd }: Props) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="z. B. Tesla"
-                className="px-3 py-2 rounded-lg bg-zinc-800 border border-zinc-700 outline-none"
+                className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
               />
             </label>
             <label className="grid gap-1">
@@ -57,7 +56,7 @@ export default function AddIndexDialog({ onAdd }: Props) {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as AssetCategory)}
-                className="px-3 py-2 rounded-lg bg-zinc-800 border border-zinc-700"
+                className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
               >
                 {categories.map((c) => (
                   <option key={c} value={c}>
@@ -74,7 +73,7 @@ export default function AddIndexDialog({ onAdd }: Props) {
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
                 placeholder="Krypto, Momentum"
-                className="px-3 py-2 rounded-lg bg-zinc-800 border border-zinc-700 outline-none"
+                className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
               />
             </label>
           </div>
@@ -88,7 +87,7 @@ export default function AddIndexDialog({ onAdd }: Props) {
             </button>
             <button
               onClick={() => setOpen(false)}
-              className="px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700"
+              className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
             >
               Abbrechen
             </button>
@@ -97,7 +96,7 @@ export default function AddIndexDialog({ onAdd }: Props) {
       ) : (
         <button
           onClick={() => setOpen(true)}
-          className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700"
+          className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
         >
           + Neuer Index
         </button>

@@ -1,10 +1,11 @@
-// --- filepath: src/App.tsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import ReactDOM from "react-dom/client";
 import AddIndexDialog from "./components/AddIndexDialog";
 import { useIndices } from "./store/indices";
 import IndexCard from "./components/IndexCard";
 import CsvImport from "./components/CsvImport";
 import { exportAllAsCSV } from "./utils/export";
+import { useTheme } from "./context/ThemeContext";
 
 export default function App() {
   const { items, addIndex, removeIndex, recompute, undo, redo } = useIndices();
@@ -12,6 +13,7 @@ export default function App() {
   const [range, setRange] = useState<"7" | "30" | "90">("30");
   const [category, setCategory] = useState<"ALL" | string>("ALL");
   const [gauge, setGauge] = useState<"svg" | "radial">("svg");
+  const { theme, setTheme } = useTheme();
 
   const filtered = useMemo(() => {
     return items.filter(
@@ -28,21 +30,33 @@ export default function App() {
     }
   }
 
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.documentElement.classList.toggle("light", theme === "light");
+    localStorage.setItem("theme", theme);
+}, [theme]);
+
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
+  <div className="max-w-6xl mx-auto p-6 space-y-6 bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
       <header className="flex items-center gap-3 flex-wrap">
         <h1 className="text-2xl font-bold">Fear & Greed Dashboard</h1>
+        <button
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
+        >
+          {theme === "dark" ? "⚪ Switch Light" : "⚫ Switch Dark"}
+        </button>
         <div className="ml-auto flex items-center gap-2 flex-wrap">
           <button
             onClick={undo}
-            className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700"
+            className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
             title="Rückgängig (Undo)"
           >
             ↶ Undo
           </button>
           <button
             onClick={redo}
-            className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700"
+            className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
             title="Wiederholen (Redo)"
           >
             ↷ Redo
@@ -50,7 +64,7 @@ export default function App() {
           <select
             value={gauge}
             onChange={(e) => setGauge(e.target.value as any)}
-            className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700"
+            className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
             <option value="svg">Gauge: SVG</option>
             <option value="radial">Gauge: Radial</option>
@@ -58,7 +72,7 @@ export default function App() {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700"
+            className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
             <option value="ALL">Alle Kategorien</option>
             <option>Tech-Aktien</option>
@@ -71,12 +85,12 @@ export default function App() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Suchen…"
-            className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 outline-none"
+            className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           />
           <select
             value={range}
             onChange={(e) => setRange(e.target.value as any)}
-            className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700"
+            className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
             <option value="7">7 Tage</option>
             <option value="30">30 Tage</option>
@@ -84,7 +98,7 @@ export default function App() {
           </select>
           <button
             onClick={() => recompute()}
-            className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700"
+            className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
             Neu berechnen
           </button>
@@ -92,13 +106,13 @@ export default function App() {
           <CsvImport />
           <button
             onClick={() => exportAllAsCSV(items)}
-            className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700"
+            className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
             Export CSV
           </button>
           <button
             onClick={() => handelRemoveAll()}
-            className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700"
+            className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
             Alles entfernen
           </button>

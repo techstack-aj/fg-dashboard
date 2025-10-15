@@ -1,4 +1,3 @@
-// --- filepath: src/components/GaugeRadial.tsx
 import React from "react";
 import {
   RadialBarChart,

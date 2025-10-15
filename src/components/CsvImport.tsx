@@ -145,7 +145,7 @@ export default function CsvImport() {
   };
 
   return (
-    <label className="px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 cursor-pointer">
+    <label className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700">
       {busy ? "Importiere…" : "Import CSV"}
       <input
         type="file"
@@ -158,7 +158,7 @@ export default function CsvImport() {
         <select
           value={mode}
           onChange={(e) => setMode(e.target.value as any)}
-          className="px-2 py-1 rounded-lg bg-zinc-900 border border-zinc-700"
+          className="px-2 py-1 rounded-lg bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           title="Import-Modus"
         >
           <option value="append">Anfügen</option>

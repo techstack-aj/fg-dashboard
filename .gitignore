@@ -1,5 +1,7 @@
 /node_modules/
 /dist/
 /.screenshots/
+/.notizen
+/.backup
 /.env
 *.log

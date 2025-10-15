@@ -1,5 +1,5 @@
-// --- filepath: src/components/Barometer.tsx
 import React from "react";
+import { useTheme } from "../context/ThemeContext";
 
 interface Props {
   value: number;
@@ -15,6 +15,7 @@ export default function Barometer({ value, size = 160 }: Props) {
   const cy = size / 2;
   const needleX = cx + r * Math.cos(angle);
   const needleY = cy + r * Math.sin(angle);
+  const { theme, setTheme } = useTheme();
 
   return (
     <svg
@@ -46,7 +47,7 @@ export default function Barometer({ value, size = 160 }: Props) {
         y1={cy}
         x2={needleX}
         y2={needleY}
-        stroke="white"
+        stroke={theme === "dark" ? "white" : "black"}
         strokeWidth={3}
       />
       <circle cx={cx} cy={cy} r={4} fill="white" />
@@ -54,7 +55,7 @@ export default function Barometer({ value, size = 160 }: Props) {
         x={cx}
         y={cy + 28}
         textAnchor="middle"
-        className="fill-zinc-200 text-sm"
+        className="fill-zinc-700 dark:fill-zinc-200 text-sm"
       >
         {v}
       </text>
@@ -62,7 +63,7 @@ export default function Barometer({ value, size = 160 }: Props) {
         x={cx}
         y={cy + 44}
         textAnchor="middle"
-        className="fill-zinc-400 text-xs"
+        className="fill-zinc-600 dark:fill-zinc-400 text-xs"
       >
         {v < 34 ? "Fear" : v > 66 ? "Greed" : "Neutral"}
       </text>

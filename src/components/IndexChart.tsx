@@ -1,4 +1,3 @@
-// --- filepath: src/components/IndexChart.tsx
 import React from "react";
 import {
   LineChart,
@@ -24,7 +23,7 @@ export default function IndexChart({ data, height = 220 }: Props) {
           data={data}
           margin={{ top: 10, right: 16, bottom: 0, left: 0 }}
         >
-          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+          <CartesianGrid strokeDasharray="3 3" opacity={0.2} strokeWidth={2} />
           <XAxis dataKey="t" hide tick={{ fontSize: 12 }} />
           <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} width={30} />
           <Tooltip
