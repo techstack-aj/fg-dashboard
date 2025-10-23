@@ -50,7 +50,7 @@ export default function Barometer({ value, size = 160 }: Props) {
         stroke={theme === "dark" ? "white" : "black"}
         strokeWidth={3}
       />
-      <circle cx={cx} cy={cy} r={4} fill="white" />
+      <circle cx={cx} cy={cy} r={4} fill={theme === "dark" ? "white" : "black"} />
       <text
         x={cx}
         y={cy + 28}

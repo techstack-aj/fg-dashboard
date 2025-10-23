@@ -1,22 +1,16 @@
 import React, { useState } from "react";
-import { AssetCategory } from "../types";
+import { IndexCategory, INDEX_CATEGORIES } from "../config/categories";
 
 interface Props {
-  onAdd: (name: string, category: AssetCategory, tags: string[]) => void;
+  onAdd: (name: string, category: IndexCategory, tags: string[]) => void;
 }
 
-const categories: AssetCategory[] = [
-  "Tech-Aktien",
-  "Altcoins",
-  "Cannabis-Aktien",
-  "Index",
-  "Custom",
-];
+const categories: IndexCategory[] = INDEX_CATEGORIES; // Exclude "Alle Kategorien"
 
 export default function AddIndexDialog({ onAdd }: Props) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
-  const [category, setCategory] = useState<AssetCategory>("Custom");
+  const [category, setCategory] = useState<IndexCategory>("Custom");
   const [tags, setTags] = useState("");
 
   const canSubmit = name.trim().length > 1;
@@ -55,7 +49,7 @@ export default function AddIndexDialog({ onAdd }: Props) {
               <span className="text-sm text-zinc-300">Kategorie</span>
               <select
                 value={category}
-                onChange={(e) => setCategory(e.target.value as AssetCategory)}
+                onChange={(e) => setCategory(e.target.value as IndexCategory)}
                 className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
               >
                 {categories.map((c) => (

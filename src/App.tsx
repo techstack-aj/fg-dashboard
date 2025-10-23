@@ -6,6 +6,8 @@ import IndexCard from "./components/IndexCard";
 import CsvImport from "./components/CsvImport";
 import { exportAllAsCSV } from "./utils/export";
 import { useTheme } from "./context/ThemeContext";
+import { ALL_CATEGORIES, INDEX_CATEGORIES } from "./config/categories";
+
 
 export default function App() {
   const { items, addIndex, removeIndex, recompute, undo, redo } = useIndices();
@@ -74,12 +76,12 @@ export default function App() {
             onChange={(e) => setCategory(e.target.value)}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
-            <option value="ALL">Alle Kategorien</option>
-            <option>Tech-Aktien</option>
-            <option>Altcoins</option>
-            <option>Cannabis-Aktien</option>
-            <option>Index</option>
-            <option>Custom</option>
+            <option value="ALL">{ALL_CATEGORIES}</option>
+            {INDEX_CATEGORIES.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
           </select>
           <input
             value={query}
