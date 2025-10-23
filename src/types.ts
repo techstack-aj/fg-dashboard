@@ -1,12 +1,6 @@
-// --- filepath: src/types.ts
-export type ISODate = string;
+import { Category, IndexCategory } from "./config/categories";
 
-export type AssetCategory =
-  | "Tech-Aktien"
-  | "Altcoins"
-  | "Cannabis-Aktien"
-  | "Index"
-  | "Custom";
+export type ISODate = string;
 
 export interface IndexPoint {
   date: string;   // "YYYY-MM-DD"
@@ -16,7 +10,7 @@ export interface IndexPoint {
 export interface IndexItem {
   id: string;
   name: string;
-  category: string;
+  category: Category;
   tags: string[];
   value: number;
   history: IndexPoint[];
@@ -24,17 +18,6 @@ export interface IndexItem {
 
 export interface NewIndexPayload {
   name: string;
-  category: AssetCategory | "Custom";
+  category: IndexCategory;
   tags: string;
-}
-
-// --- filepath: src/utils/dates.ts
-export function toISO(d: Date): string {
-  return d.toISOString().split("T")[0];
-}
-
-export function daysAgo(n: number): Date {
-  const d = new Date();
-  d.setDate(d.getDate() - n);
-  return d;
 }
