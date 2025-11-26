@@ -193,7 +193,7 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
    };
    
    const handleConfirmDelete = () => {
-     if (deleteId) deleteIndex(deleteId);
+     if (deleteId) removeIndex(deleteId);
      setDeleteDialogOpen(false);
      setDeleteId(null);
    };
@@ -241,11 +241,25 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
 2. Erstelle State für Form-Felder:
    ```tsx
    const [name, setName] = useState('');
-   const [category, setCategory] = useState('');
-   const [currentValue, setCurrentValue] = useState(50);
+   const [category, setCategory] = useState<Category>('Aktien');
    const [tags, setTags] = useState<string[]>([]);
    ```
-3. Implementiere Dialog mit Form:
+3. Erstelle useEffect für Reset beim Öffnen:
+   ```tsx
+   useEffect(() => {
+     if (mode === 'edit' && initialData) {
+       setName(initialData.name);
+       setCategory(initialData.category);
+       setTags(initialData.tags);
+     } else {
+       setName('');
+       setCategory('Aktien');
+       setTags([]);
+     }
+   }, [mode, initialData, open]);
+   ```[mode, initialData, open]);
+   ```
+4. Implementiere Dialog mit Form:
    ```tsx
    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
      <DialogTitle>Neuen Index erstellen</DialogTitle>
@@ -267,21 +281,14 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
      </DialogActions>
    </Dialog>
    ```
-4. Erstelle Submit Handler:
+5. Erstelle Submit Handler:
    ```tsx
    const handleSubmit = () => {
-     addIndex({
-       id: crypto.randomUUID(),
-       name,
-       category,
-       currentValue,
-       tags,
-       history: []
-     });
+     addIndex(name, category, tags);
      onClose();
    };
    ```
-5. **Kategorien:** Verwende `<Select>` oder `<Autocomplete>`:
+6. **Kategorien:** Verwende `<Select>`:
    ```tsx
    import { CATEGORIES } from '../config/categories';
    
@@ -289,22 +296,38 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
      <InputLabel>Kategorie</InputLabel>
      <Select value={category} onChange={(e) => setCategory(e.target.value)}>
        {CATEGORIES.map(cat => (
-         <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
+         <MenuItem key={cat} value={cat}>{cat}</MenuItem>
        ))}
      </Select>
    </FormControl>
    ```
-6. **Tags:** Verwende `<Autocomplete>` mit `freeSolo + multiple`:
+7. **Tags:** Verwende einfaches `<TextField>` mit Komma-Trennung:
    ```tsx
-   <Autocomplete
-     multiple
-     freeSolo
-     options={[]}
-     value={tags}
-     onChange={(e, newValue) => setTags(newValue)}
-     renderInput={(params) => (
-       <TextField {...params} label="Tags" placeholder="Tag eingeben..." />
-     )}
+   <TextField
+     label="Tags"
+     placeholder="Tags mit Komma trennen (z.B. crypto, volatile)"
+     value={tags.join(', ')}
+     onChange={(e) => {
+       const input = e.target.value;
+       const tagsArray = input.split(',').map(t => t.trim()).filter(t => t);
+       setTags(tagsArray);
+     }}
+     fullWidth
+     margin="normal"
+   />
+   ```
+8. **In App-MUI.tsx einbinden:**
+   ```tsx
+   const [dialogOpen, setDialogOpen] = useState(false);
+   
+   <Button startIcon={<AddIcon />} onClick={() => setDialogOpen(true)}>
+     Neuer Index
+   </Button>
+   
+   <IndexDialog 
+     open={dialogOpen}
+     onClose={() => setDialogOpen(false)}
+     mode="create"
    />
    ```
 
@@ -329,13 +352,11 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
      if (initialData && mode === 'edit') {
        setName(initialData.name);
        setCategory(initialData.category);
-       setCurrentValue(initialData.currentValue);
        setTags(initialData.tags);
      } else {
        // Reset für Create Mode
        setName('');
-       setCategory('');
-       setCurrentValue(50);
+       setCategory('Aktien');
        setTags([]);
      }
    }, [initialData, mode, open]);
@@ -344,9 +365,9 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
    ```tsx
    const handleSubmit = () => {
      if (mode === 'create') {
-       addIndex({ id: crypto.randomUUID(), name, category, currentValue, tags, history: [] });
+       addIndex(name, category, tags);
      } else if (initialData) {
-       updateIndex(initialData.id, { name, category, currentValue, tags });
+       // Note: Store hat kein updateIndex - Workaround nötig (removeIndex + addIndex)
      }
      onClose();
    };
