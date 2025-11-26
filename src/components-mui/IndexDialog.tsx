@@ -22,8 +22,9 @@ export default function IndexDialog({ open, onClose, mode, initialData }: IndexD
   const [category, setCategory] = useState<Category>('Aktien');
   const [value, setValue] = useState(50);
   const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState(''); // Raw-Input für TextField
 
-  const { addIndex } = useIndices();
+  const { addIndex, removeIndex } = useIndices();
 
   useEffect(() => {
     if (mode === 'edit' && initialData) {
@@ -31,11 +32,13 @@ export default function IndexDialog({ open, onClose, mode, initialData }: IndexD
       setCategory(initialData.category);
       setValue(initialData.value);
       setTags(initialData.tags);
+      setTagInput(initialData.tags.join(', ')); // Setze auch Raw-Input
     } else {
       setName('');
       setCategory('Aktien');
       setValue(50);
       setTags([]);
+      setTagInput(''); // Reset Raw-Input
     }
   }, [mode, initialData, open]);
 
@@ -43,7 +46,8 @@ export default function IndexDialog({ open, onClose, mode, initialData }: IndexD
     if (mode === 'create') {
       addIndex(name, category, tags);
     } else if (mode === 'edit' && initialData) {
-      // Edit: Store hat kein updateIndex - wird in Kapitel 1.7 gelöst
+      removeIndex(initialData.id);
+      addIndex(name, category, tags);
     }
     onClose();
   };
@@ -71,10 +75,11 @@ export default function IndexDialog({ open, onClose, mode, initialData }: IndexD
           <TextField
             label="Tags"
             placeholder="Tags mit Komma trennen (z.B. crypto, volatile)"
-            value={tags.join(', ')}
-            onChange={(e) => {
-              const input = e.target.value;
-              const tagsArray = input.split(',').map(t => t.trim()).filter(t => t);
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onBlur={() => {
+              // Beim Verlassen des Feldes: Split und Update
+              const tagsArray = tagInput.split(',').map(t => t.trim()).filter(t => t);
               setTags(tagsArray);
             }}
             fullWidth

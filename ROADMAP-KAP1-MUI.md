@@ -301,21 +301,27 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
      </Select>
    </FormControl>
    ```
-7. **Tags:** Verwende einfaches `<TextField>` mit Komma-Trennung:
+7. **Tags:** Verwende einfaches `<TextField>` mit `onBlur` (besser editierbar):
    ```tsx
+   const [tagInput, setTagInput] = useState(''); // Zusätzlicher State
+   
+   // Im useEffect auch tagInput setzen:
+   setTagInput(initialData.tags.join(', '));
+   
    <TextField
      label="Tags"
      placeholder="Tags mit Komma trennen (z.B. crypto, volatile)"
-     value={tags.join(', ')}
-     onChange={(e) => {
-       const input = e.target.value;
-       const tagsArray = input.split(',').map(t => t.trim()).filter(t => t);
+     value={tagInput}
+     onChange={(e) => setTagInput(e.target.value)}
+     onBlur={() => {
+       const tagsArray = tagInput.split(',').map(t => t.trim()).filter(t => t);
        setTags(tagsArray);
      }}
      fullWidth
      margin="normal"
    />
    ```
+   **Hinweis:** `onBlur` splittet erst beim Verlassen des Feldes - so kann man während des Tippens Kommas eingeben ohne dass sofort gesplittet wird.
 8. **In App-MUI.tsx einbinden:**
    ```tsx
    const [dialogOpen, setDialogOpen] = useState(false);
@@ -343,63 +349,49 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
 📁 **Datei:** `src/components-mui/IndexDialog.tsx`
 
 **Aufgaben:**
-1. Erweitere Dialog für Edit Mode:
+1. **useEffect ist bereits implementiert** (aus Kapitel 1.6) - resettet State basierend auf `mode`, `initialData` und `open`
+
+2. Implementiere Edit-Logik im Submit Handler:
    ```tsx
-   const { open, onClose, mode, initialData } = props;
+   const { removeIndex } = useIndices(); // Zusätzlich zu addIndex
    
-   // Initialisiere State mit initialData
-   useEffect(() => {
-     if (initialData && mode === 'edit') {
-       setName(initialData.name);
-       setCategory(initialData.category);
-       setTags(initialData.tags);
-     } else {
-       // Reset für Create Mode
-       setName('');
-       setCategory('Aktien');
-       setTags([]);
-     }
-   }, [initialData, mode, open]);
-   ```
-2. Passe Submit Handler an:
-   ```tsx
    const handleSubmit = () => {
      if (mode === 'create') {
        addIndex(name, category, tags);
-     } else if (initialData) {
-       // Note: Store hat kein updateIndex - Workaround nötig (removeIndex + addIndex)
+     } else if (mode === 'edit' && initialData) {
+       // Workaround: Store hat kein updateIndex
+       removeIndex(initialData.id);
+       addIndex(name, category, tags);
      }
      onClose();
    };
    ```
-3. Dynamischer Dialog Title:
+
+3. **Dialog Title und Button Text sind bereits dynamisch** (aus Kapitel 1.6):
+   - DialogTitle: `{mode === 'create' ? 'Index erstellen' : 'Index bearbeiten'}`
+   - Button: `{mode === 'create' ? 'Erstellen' : 'Speichern'}`
+
+4. Implementiere Edit-Handler in `App-MUI.tsx`:
    ```tsx
-   <DialogTitle>
-     {mode === 'create' ? 'Neuen Index erstellen' : 'Index bearbeiten'}
-   </DialogTitle>
-   ```
-4. Dynamischer Button Text:
-   ```tsx
-   <Button variant="contained" onClick={handleSubmit}>
-     {mode === 'create' ? 'Erstellen' : 'Speichern'}
-   </Button>
-   ```
-5. Verbinde mit IndexTable:
-   ```tsx
-   // In IndexTable.tsx:
-   <IconButton onClick={() => props.onEdit(index.id)}>
-     <EditIcon />
-   </IconButton>
+   const [dialogOpen, setDialogOpen] = useState(false);
+   const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create');
+   const [editingIndex, setEditingIndex] = useState<IndexItem | undefined>();
    
-   // In DashboardGrid.tsx:
-   const [editingIndex, setEditingIndex] = useState<Index | undefined>();
-   
-   <IndexTable onEdit={(id) => {
+   const handleEdit = (id: string) => {
      const index = items.find(i => i.id === id);
      setEditingIndex(index);
      setDialogMode('edit');
      setDialogOpen(true);
-   }} />
+   };
+   
+   <DashboardGrid onEdit={handleEdit} />
+   
+   <IndexDialog 
+     open={dialogOpen}
+     onClose={() => setDialogOpen(false)}
+     mode={dialogMode}
+     initialData={editingIndex}
+   />
    ```
 
 **Test Checklist:**

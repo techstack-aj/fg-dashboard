@@ -154,11 +154,8 @@ App-MUI.tsx
 │   └── [🌙] Dark Mode Toggle
 │
 ├── DashboardGrid (1.3)
-│   ├── Grid Item: IndexTable (1.2)
-│   │   └── Icons (1.4): ✏️ Edit, 🗑️ Delete (1.5)
-│   │
-│   └── Grid Item: Barometer
-│       └── (Original-Komponente)
+│   └── Grid Item: IndexTable (1.2)
+│       └── Icons (1.4): ✏️ Edit, 🗑️ Delete (1.5)
 │
 └── IndexDialog (1.6 & 1.7)
     ├── Create Mode: Leeres Formular
