@@ -12,6 +12,7 @@ import DashboardGrid from './components-mui/DashboardGrid';
 import IndexDialog from './components-mui/IndexDialog';
 import { useIndices } from './store/indices';
 import AddIcon from '@mui/icons-material/Add';
+import DashboardToggle from './components/DashboardToggle';
 
 export default function AppMUI() {
   const { items } = useIndices();
@@ -52,6 +53,8 @@ export default function AppMUI() {
         mode={dialogMode}
         initialData={editingIndex}
       />
+      
+      <DashboardToggle />
     </ThemeProvider>
   );
 }
