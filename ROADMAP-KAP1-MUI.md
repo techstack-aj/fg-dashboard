@@ -301,21 +301,27 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
      </Select>
    </FormControl>
    ```
-7. **Tags:** Verwende einfaches `<TextField>` mit Komma-Trennung:
+7. **Tags:** Verwende einfaches `<TextField>` mit `onBlur` (besser editierbar):
    ```tsx
+   const [tagInput, setTagInput] = useState(''); // Zusätzlicher State
+   
+   // Im useEffect auch tagInput setzen:
+   setTagInput(initialData.tags.join(', '));
+   
    <TextField
      label="Tags"
      placeholder="Tags mit Komma trennen (z.B. crypto, volatile)"
-     value={tags.join(', ')}
-     onChange={(e) => {
-       const input = e.target.value;
-       const tagsArray = input.split(',').map(t => t.trim()).filter(t => t);
+     value={tagInput}
+     onChange={(e) => setTagInput(e.target.value)}
+     onBlur={() => {
+       const tagsArray = tagInput.split(',').map(t => t.trim()).filter(t => t);
        setTags(tagsArray);
      }}
      fullWidth
      margin="normal"
    />
    ```
+   **Hinweis:** `onBlur` splittet erst beim Verlassen des Feldes - so kann man während des Tippens Kommas eingeben ohne dass sofort gesplittet wird.
 8. **In App-MUI.tsx einbinden:**
    ```tsx
    const [dialogOpen, setDialogOpen] = useState(false);
