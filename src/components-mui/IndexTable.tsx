@@ -1,37 +1,44 @@
-// IndexTable.tsx
-// Kapitel 1.2 - Table-Komponente für Index-Liste
-//
-// Aufgabe:
-// - Zeige alle Indices aus Zustand Store in einer MUI Table
-// - Spalten: Name, Kategorie, Aktueller Wert, Tags, Aktionen
-// - Action Buttons: Edit, Delete
-//
-// Benötigte MUI Komponenten:
-// - Table, TableHead, TableBody, TableRow, TableCell, TableContainer, Paper, IconButton
-//
-// Datenquelle:
-// - useIndices() Hook: filteredIndices, deleteIndex
-//
-// Icons (Kapitel 1.4):
-// - DeleteIcon, EditIcon aus '@mui/icons-material'
-//
-// Props:
-// - onEdit: Funktion zum Bearbeiten eines Index
-//
-// Dokumentation:
-// https://mui.com/material-ui/react-table/
+// IndexTable.tsx - MUI Table Komponente für Index-Liste
+// Zeigt alle Indices in einer Tabelle mit Edit/Delete Buttons
 
 import React from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
+import { useIndices } from '../store/indices';
 
 interface IndexTableProps {
-  // TODO: Props definieren
+  onEdit?: (id: string) => void;
 }
 
-export default function IndexTable() {
-  // TODO: Implementieren
+export default function IndexTable({ onEdit }: IndexTableProps) {
+  const { items, removeIndex } = useIndices();
+
   return (
-    <div>
-      <p>TODO: IndexTable implementieren (Kapitel 1.2)</p>
-    </div>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Kategorie</TableCell>
+            <TableCell>Wert</TableCell>
+            <TableCell>Tags</TableCell>
+            <TableCell>Aktionen</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {items.map((index) => (
+            <TableRow key={index.id}>
+              <TableCell>{index.name}</TableCell>
+              <TableCell>{index.category}</TableCell>
+              <TableCell>{index.value}</TableCell>
+              <TableCell>{index.tags.join(', ')}</TableCell>
+              <TableCell>
+                <IconButton onClick={() => { if (onEdit) onEdit(index.id); }}>✏️</IconButton>
+                <IconButton onClick={() => removeIndex(index.id)}>🗑️</IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
