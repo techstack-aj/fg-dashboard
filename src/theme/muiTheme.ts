@@ -1,24 +1,7 @@
 // muiTheme.ts
 // Kapitel 1.1 - Material-UI Theme-Konfiguration
-//
-// Aufgabe:
-// - Erstelle ein Custom Theme mit createTheme()
-// - Definiere Farbpalette: primary, secondary, error, warning, info, success
-// - Konfiguriere Light/Dark Mode Support
-// - Passe Typography an (Schriftfamilie, Größen)
-//
-// Anforderungen:
-// 1. Importiere createTheme von '@mui/material/styles'
-// 2. Wähle primary Farbe (z.B. #1976d2 oder eigene)
-// 3. Exportiere Theme als Default
-// 4. Mode: 'light' oder 'dark' in palette
-//
-// Dokumentation:
-// https://mui.com/material-ui/customization/theming/
-// https://mui.com/material-ui/customization/palette/
-// https://mui.com/material-ui/customization/dark-mode/
+// Custom Theme mit Farbpalette (Dark Mode) und Typography
 
-// TODO: Implementieren
 import { createTheme } from '@mui/material/styles';
 
 const muiTheme = createTheme({
