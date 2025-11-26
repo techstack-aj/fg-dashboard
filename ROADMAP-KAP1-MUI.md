@@ -65,18 +65,18 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
    ```
 2. Hole Daten aus Zustand:
    ```tsx
-   const { filteredIndices, deleteIndex } = useIndices();
+   const { items, removeIndex } = useIndices();
    ```
 3. Erstelle Table-Struktur:
    - `<TableContainer component={Paper}>`
    - `<TableHead>` mit Spalten: Name, Kategorie, Wert, Tags, Aktionen
-   - `<TableBody>` mit `.map()` über `filteredIndices`
+   - `<TableBody>` mit `.map()` über `items`
 4. Zeige Daten an:
-   - `index.name`, `index.category`, `index.currentValue`
+   - `index.name`, `index.category`, `index.value`
    - Tags: verwende `.join(', ')` oder später `<Chip>` (Kapitel 1.4)
 5. Action Buttons (Icons kommen in Kapitel 1.4):
    - Edit Button mit `onClick={() => onEdit(index.id)}`
-   - Delete Button mit `onClick={() => deleteIndex(index.id)}`
+   - Delete Button mit `onClick={() => removeIndex(index.id)}`
 
 **Dokumentation:**
 - [MUI Table](https://mui.com/material-ui/react-table/)

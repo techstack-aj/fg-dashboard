@@ -1,30 +1,45 @@
 // DashboardGrid.tsx
 // Kapitel 1.3 - Responsive Grid Layout
 //
-// Aufgabe:
-// - Erstelle Grid-Layout für Dashboard-Komponenten
-// - Responsive Breakpoints: xs, sm, md, lg, xl
-// - Integriere IndexTable und Barometer
+// KONZEPT:
+// Grid2 teilt die Breite in 12 Spalten auf:
+// - size={{ xs: 12 }} = 100% Breite (alle 12 Spalten)
+// - size={{ xs: 6 }} = 50% Breite (6 von 12 Spalten)
+// - size={{ xs: 12, lg: 8 }} = Mobile 100%, Desktop 66%
 //
-// Benötigte MUI Komponenten:
-// - Grid2 (neue Grid-Version), Paper, Box
+// BREAKPOINTS:
+// xs = 0px+ (Mobile), md = 900px+ (Tablet), lg = 1200px+ (Desktop)
 //
-// Breakpoint-Konzept:
-// - Mobile (xs): volle Breite
-// - Tablet (md): halbe Breite
-// - Desktop (lg): angepasste Breite (z.B. 8/4 oder 6/6)
+// STRUKTUR:
+// Box (Outer Wrapper mit Padding)
+//  └─ Grid container (mit spacing für Abstände)
+//      ├─ Grid Item 1 (IndexTable in Paper)
+//      └─ Grid Item 2 (Barometer in Paper)
 //
-// Komponenten:
-// - IndexTable aus './IndexTable'
-// - Barometer aus '../components/Barometer'
+// BENÖTIGTE IMPORTS:
+// - Grid from '@mui/material/Grid2'
+// - Box, Paper from '@mui/material'
+// - IndexTable from './IndexTable'
+// - Barometer from '../components/Barometer'
+//
+// PROPS:
+// - onEdit?: (id: string) => void  (wird an IndexTable weitergegeben)
+//
+// EMPFOHLENE GRID-GRÖßEN:
+// - IndexTable: size={{ xs: 12, lg: 8 }}  (links, größer)
+// - Barometer: size={{ xs: 12, lg: 4 }}   (rechts, kleiner)
 //
 // Dokumentation:
 // https://mui.com/material-ui/react-grid2/
-// https://mui.com/material-ui/customization/breakpoints/
 
 import React from 'react';
+// TODO: Imports hinzufügen
 
-export default function DashboardGrid() {
+interface DashboardGridProps {
+  onEdit?: (id: string) => void;
+}
+
+export default function DashboardGrid({ onEdit }: DashboardGridProps) {
   // TODO: Implementieren
   return (
     <div>
