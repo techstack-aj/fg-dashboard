@@ -8,13 +8,18 @@
 import React from 'react';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from './theme/muiTheme';
-import DashboardGrid from './components-mui/DashboardGrid';
 
 export default function AppMUI() {
+  // TODO: Weitere Komponenten in späteren Kapiteln hinzufügen
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <DashboardGrid onEdit={(id) => console.log('Edit:', id)} />
+      <div>
+        <h1>TODO: App-MUI implementieren</h1>
+        <p>Aktiviere diese App in main.tsx:</p>
+        <pre>import App from './App-MUI'</pre>
+      </div>
     </ThemeProvider>
   );
 }
