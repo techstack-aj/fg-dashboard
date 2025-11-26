@@ -6,16 +6,35 @@
 // App aktivieren: In main.tsx → import App from './App-MUI'
 
 import React from 'react';
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import { ThemeProvider, CssBaseline, Button, Box } from '@mui/material';
 import theme from './theme/muiTheme';
 import DashboardGrid from './components-mui/DashboardGrid';
-import AddIcon from '@mui/icons-material/Add'; // ToDo, soll für Kap.-1.6 implementiert werden
+import IndexDialog from './components-mui/IndexDialog';
+import AddIcon from '@mui/icons-material/Add';
 
 export default function AppMUI() {
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <DashboardGrid onEdit={(id) => console.log('Edit:', id)} />
+      <Box sx={{ p: 2 }}>
+        <Button 
+          startIcon={<AddIcon />} 
+          onClick={() => setDialogOpen(true)}
+          variant="contained"
+          sx={{ mb: 2 }}
+        >
+          Neuer Index
+        </Button>
+        <DashboardGrid onEdit={(id) => console.log('Edit:', id)} />
+      </Box>
+      
+      <IndexDialog 
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        mode="create"
+      />
     </ThemeProvider>
   );
 }
