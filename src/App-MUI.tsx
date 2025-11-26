@@ -9,6 +9,7 @@ import React from 'react';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from './theme/muiTheme';
 import DashboardGrid from './components-mui/DashboardGrid';
+import AddIcon from '@mui/icons-material/Add'; // ToDo, soll für Kap.-1.6 implementiert werden
 
 export default function AppMUI() {
   return (

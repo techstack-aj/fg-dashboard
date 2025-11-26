@@ -3,6 +3,10 @@
 
 import React, { useState, useEffect } from 'react';
 import type { IndexItem } from '../types';
+
+// sollen später verwendet werden
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 // TODO: MUI Komponenten importieren
 // TODO: useIndices importieren
 // TODO: CATEGORIES importieren
