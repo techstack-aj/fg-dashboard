@@ -4,6 +4,8 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
 import { useIndices } from '../store/indices';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface IndexTableProps {
   onEdit?: (id: string) => void;
@@ -32,8 +34,8 @@ export default function IndexTable({ onEdit }: IndexTableProps) {
               <TableCell>{index.value}</TableCell>
               <TableCell>{index.tags.join(', ')}</TableCell>
               <TableCell>
-                <IconButton onClick={() => { if (onEdit) onEdit(index.id); }}>✏️</IconButton>
-                <IconButton onClick={() => removeIndex(index.id)}>🗑️</IconButton>
+                <IconButton onClick={() => { if (onEdit) onEdit(index.id); }}><EditIcon /></IconButton>
+                <IconButton onClick={() => removeIndex(index.id)}><DeleteIcon /></IconButton>
               </TableCell>
             </TableRow>
           ))}
