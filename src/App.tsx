@@ -7,6 +7,7 @@ import CsvImport from "./components/CsvImport";
 import { exportAllAsCSV } from "./utils/export";
 import { useTheme } from "./context/ThemeContext";
 import { ALL_CATEGORIES, INDEX_CATEGORIES } from "./config/categories";
+import DashboardToggle from "./components/DashboardToggle";
 
 
 export default function App() {
@@ -142,6 +143,8 @@ export default function App() {
         Dummy-Daten & FGI-Formel nur zu Demonstrationszwecken. Später per API
         ersetzbar.
       </footer>
+      
+      <DashboardToggle />
     </div>
   );
 }
