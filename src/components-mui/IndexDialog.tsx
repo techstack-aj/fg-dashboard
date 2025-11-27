@@ -15,9 +15,10 @@ interface IndexDialogProps {
   onClose: () => void;
   mode: 'create' | 'edit';
   initialData?: IndexItem;
+  onSuccess?: (action: 'create' | 'edit') => void;
 }
 
-export default function IndexDialog({ open, onClose, mode, initialData }: IndexDialogProps) {
+export default function IndexDialog({ open, onClose, mode, initialData, onSuccess }: IndexDialogProps) {
   const [name, setName] = useState('');
   const [category, setCategory] = useState<Category>('Aktien');
   const [value, setValue] = useState(50);
@@ -45,9 +46,11 @@ export default function IndexDialog({ open, onClose, mode, initialData }: IndexD
   const handleSubmit = () => {
     if (mode === 'create') {
       addIndex(name, category, tags);
+      onSuccess?.('create');
     } else if (mode === 'edit' && initialData) {
       removeIndex(initialData.id);
       addIndex(name, category, tags);
+      onSuccess?.('edit');
     }
     onClose();
   };

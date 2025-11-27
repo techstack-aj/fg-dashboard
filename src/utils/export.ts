@@ -10,17 +10,19 @@ function toCSV(rows: Array<Record<string, string | number>>): string {
     for (const r of rows) {
         lines.push(headers.map(h => `"${esc(r[h] ?? '')}"`).join(','))
     }
-    return lines.join('')
+    return lines.join('\n')
 }
 
 
 export function exportAllAsCSV(items: IndexItem[]) {
-    // Ein kombiniertes CSV: index,date,value
+    // CSV-Format: name,category,tags (kompatibel mit Import)
     const rows: Array<Record<string, string | number>> = []
     for (const it of items) {
-        for (const p of it.history) {
-            rows.push({ index: it.name, date: p.date, value: p.value })
-        }
+        rows.push({ 
+            name: it.name, 
+            category: it.category, 
+            tags: it.tags.join(';') 
+        })
     }
     const csv = toCSV(rows)
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })

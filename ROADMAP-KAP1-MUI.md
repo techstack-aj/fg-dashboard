@@ -404,22 +404,17 @@ console.log(theme); // Sollte Theme-Objekt ausgeben
 
 ## 🔄 App zwischen Original und MUI wechseln
 
-📁 **Datei:** `src/main.tsx`
+✅ **Bereits implementiert!** Dashboard-Toggle ermöglicht Wechsel per Button.
 
-**Standard (Tailwind App):**
-```tsx
-import App from './App'
-```
+📁 **Dateien:** `src/main.tsx`, `src/components/DashboardToggle.tsx`
 
-**MUI Version aktivieren:**
-```tsx
-import App from './App-MUI'
-```
+**Implementierung:**
+- `main.tsx` lädt App dynamisch basierend auf LocalStorage
+- `DashboardToggle` Button in beiden Versionen (rechts unten)
+- Klick auf Button wechselt zwischen Original und MUI
+- Auswahl wird persistent gespeichert
 
-**Tipp:** Nutze Git-Branches für verschiedene Versionen:
-```bash
-git checkout -b feature/mui-implementation
-```
+**Hinweis:** Wird später durch React Router ersetzt (Kapitel Routing)
 
 ---
 
@@ -447,66 +442,169 @@ git checkout -b feature/mui-implementation
 
 ---
 
-## 🎨 Bonus-Aufgaben (Optional)
+## 🎨 Bonus-Aufgaben
 
-### Dark Mode Integration
-Verbinde MUI Theme mit bestehendem `ThemeContext`:
+### ✅ Dashboard Toggle (Implementiert)
+📁 **Dateien:** `src/main.tsx`, `src/components/DashboardToggle.tsx`, `src/App.tsx`, `src/App-MUI.tsx`
 
+**Funktionalität:**
 ```tsx
-// In App-MUI.tsx:
-const { theme: themeMode } = useTheme();
+// main.tsx
+const useMUI = localStorage.getItem('dashboard-version') === 'mui';
+const App = useMUI ? AppMUI : AppOriginal;
 
-const muiTheme = useMemo(
+// DashboardToggle.tsx
+const toggleDashboard = () => {
+  const newVersion = isMUI ? 'original' : 'mui';
+  localStorage.setItem('dashboard-version', newVersion);
+  window.location.reload();
+};
+```
+
+**Features:**
+- Fixed position button (rechts unten)
+- Zeigt "🎨 → Original" oder "🎨 → MUI"
+- LocalStorage für persistente Auswahl
+- Funktioniert in beiden Dashboard-Versionen
+
+**Später:** Wird durch React Router ersetzt für nahtlosen Wechsel ohne Reload.
+
+---
+
+### ✅ Dark Mode Integration (Implementiert)
+📁 **Datei:** `src/App-MUI.tsx`
+
+**Funktionalität:**
+```tsx
+const { theme: themeMode, setTheme } = useTheme();
+
+const muiTheme = React.useMemo(
   () => createTheme({
     palette: {
       mode: themeMode, // 'light' | 'dark'
       primary: { main: '#1976d2' },
-      // ...
+      secondary: { main: '#dc004e' },
     },
   }),
   [themeMode]
 );
 
-return (
-  <ThemeProvider theme={muiTheme}>
-    <CssBaseline />
-    {/* App Content */}
-  </ThemeProvider>
-);
+<IconButton onClick={() => setTheme(themeMode === 'dark' ? 'light' : 'dark')}>
+  {themeMode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+</IconButton>
 ```
 
-### CSV Import/Export mit MUI
-- Füge `<Button>` für Export hinzu
-- Erstelle `<Dialog>` für CSV Import mit File Upload
-- Verwende `<LinearProgress>` für Ladebalken
+**Features:**
+- Theme reagiert dynamisch auf ThemeContext
+- Toggle Button in Header
+- MUI Komponenten folgen automatisch dem Theme
+- Persistenz über LocalStorage (via ThemeContext)
 
-### Snackbar für Benachrichtigungen
+---
+
+### ✅ CSV Import/Export mit MUI (Implementiert)
+📁 **Dateien:** `src/App-MUI.tsx`, `src/components-mui/CsvImportDialog.tsx`
+
+**Export:**
 ```tsx
-import { Snackbar, Alert } from '@mui/material';
+<Button startIcon={<FileDownloadIcon />} onClick={handleExport}>
+  CSV Export
+</Button>
 
-<Snackbar open={success} autoHideDuration={3000} onClose={...}>
-  <Alert severity="success">Index erfolgreich erstellt!</Alert>
+const handleExport = () => {
+  exportAllAsCSV(items);
+  // Snackbar zeigt Erfolg
+};
+```
+
+**Import:**
+```tsx
+<CsvImportDialog 
+  open={csvImportOpen} 
+  onClose={() => setCsvImportOpen(false)}
+  onSuccess={() => /* Snackbar */}
+/>
+```
+
+**Features:**
+- Export Button in Header
+- Import Dialog mit File Upload
+- LinearProgress während des Imports
+- Error Handling mit Alert-Komponenten
+
+---
+
+### ✅ Snackbar für Benachrichtigungen (Implementiert)
+📁 **Datei:** `src/App-MUI.tsx`
+
+**Funktionalität:**
+```tsx
+const [snackbar, setSnackbar] = useState<{
+  open: boolean;
+  message: string;
+  severity: 'success' | 'error'
+}>({ open: false, message: '', severity: 'success' });
+
+<Snackbar open={snackbar.open} autoHideDuration={3000}>
+  <Alert severity={snackbar.severity}>
+    {snackbar.message}
+  </Alert>
 </Snackbar>
 ```
 
-### Sortierung in Table
-- Verwende `<TableSortLabel>` in `<TableHead>`
-- Implementiere `orderBy` und `order` State
-- Sortiere `filteredIndices` dynamisch
+**Zeigt Benachrichtigungen für:**
+- Index erstellt
+- Index aktualisiert
+- Index gelöscht
+- CSV Import/Export erfolgreich
+
+---
+
+### ✅ Sortierung in Table (Implementiert)
+📁 **Datei:** `src/components-mui/IndexTable.tsx`
+
+**Funktionalität:**
+```tsx
+const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+const [orderBy, setOrderBy] = useState<'name' | 'category' | 'value'>('name');
+
+<TableSortLabel
+  active={orderBy === 'name'}
+  direction={orderBy === 'name' ? order : 'asc'}
+  onClick={() => handleRequestSort('name')}
+>
+  Name
+</TableSortLabel>
+```
+
+**Features:**
+- Sortierbar nach: Name, Kategorie, Wert
+- Auf-/Absteigend per Klick
+- Visuelles Feedback durch Pfeile
+- useMemo für Performance
 
 ---
 
 ## ✅ Checkliste: Kapitel 1 abgeschlossen
+    },
+---
 
-- [ ] **1.1:** Theme erstellt und exportiert
-- [ ] **1.2:** IndexTable zeigt alle Indices an
-- [ ] **1.3:** DashboardGrid ist responsive
-- [ ] **1.4:** Icons in allen Komponenten verwendet
-- [ ] **1.5:** Delete-Bestätigungs-Dialog funktioniert
-- [ ] **1.6:** Create-Dialog speichert neue Indices
-- [ ] **1.7:** Edit-Dialog lädt und speichert Änderungen
-- [ ] **App-MUI:** Komplett funktionsfähig
-- [ ] **Test:** Zwischen App.tsx und App-MUI.tsx gewechselt
+## ✅ Checkliste: Kapitel 1 abgeschlossen
+
+- [x] **1.1:** Theme erstellt und exportiert
+- [x] **1.2:** IndexTable zeigt alle Indices an
+- [x] **1.3:** DashboardGrid ist responsive
+- [x] **1.4:** Icons in allen Komponenten verwendet
+- [x] **1.5:** Delete-Bestätigungs-Dialog funktioniert
+- [x] **1.6:** Create-Dialog speichert neue Indices
+- [x] **1.7:** Edit-Dialog lädt und speichert Änderungen
+- [x] **App-MUI:** Komplett funktionsfähig
+- [x] **Test:** Zwischen App.tsx und App-MUI.tsx gewechselt
+- [x] **Bonus:** Dashboard-Toggle Button implementiert
+- [x] **Bonus:** Dark Mode Integration mit ThemeContext
+- [x] **Bonus:** CSV Import/Export mit MUI Buttons
+- [x] **Bonus:** Snackbar für Benachrichtigungen
+- [x] **Bonus:** Table Sortierung nach Name/Kategorie/Wert
 
 ---
 
