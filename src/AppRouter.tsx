@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-// TODO: Importiere deine Komponenten (IndexDetail, NotFound)
+// TODO: Importiere deine Komponenten (IndexDetail)
 import AppMUI from './App-MUI';
 import App from './App';
 import Navigation from './components/Navigation';
