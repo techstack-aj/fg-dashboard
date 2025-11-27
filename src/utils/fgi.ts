@@ -1,5 +1,3 @@
-// src/utils/fgi.ts
-
 export function computeFGI(seed: number): number {
   const momentum = seed * 65 + 20;
   const volFear = 100 - (seed * 30 + 10);
