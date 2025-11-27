@@ -1,4 +1,3 @@
-// --- filepath: src/utils/export.ts
 import { IndexItem } from '../types'
 
 

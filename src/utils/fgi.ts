@@ -13,7 +13,6 @@ export function pseudoRandom(seed: number) {
   return s - Math.floor(s);
 }
 
-// ⬇︎ HIER: auf { date, value } umgestellt
 export function generateHistory(days = 30, baseSeed = 42) {
   const points: { date: string; value: number }[] = [];
   for (let i = days - 1; i >= 0; i--) {
