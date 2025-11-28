@@ -50,7 +50,7 @@ export default function App() {
         <h1 className="text-2xl font-bold">{t("fear_greed_dashboard")}</h1>
         <span className="text-sm text-zinc-600 dark:text-zinc-400">
           {category === "ALL" 
-            ? t("indices_loaded", { count: items.length })
+            ? t("indices_found", { count: items.length })
             : t("indices_filtered", { filtered: filtered.length, total: items.length })
           }
         </span>
@@ -153,6 +153,9 @@ export default function App() {
       </div>
 
       <main className="grid md:grid-cols-2 gap-4">
+        <div className="col-span-full text-sm text-zinc-500 dark:text-zinc-400">
+          {t("indices_found", { count: filtered.length })}
+        </div>
         {filtered.map((i) => (
           <IndexCard
             key={i.id}
