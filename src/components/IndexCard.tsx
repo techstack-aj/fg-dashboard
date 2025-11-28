@@ -69,6 +69,7 @@ export default function IndexCard({
             )}
           </div>
         </div>
+        <div className="text-4xl font-bold">{item.fgi}</div>
         {gauge === "svg" ? (
           <Barometer value={item.value} size={140} />
         ) : (
