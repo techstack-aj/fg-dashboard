@@ -77,7 +77,10 @@ export default function IndexCard({
         )}
         {onRemove && (
           <button
-            onClick={() => onRemove(item.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove(item.id);
+            }}
             className="mt-2 text-xs text-zinc-600 dark:text-zinc-300 hover:text-red-500 dark:hover:text-red-400"
           >
             {t("remove")}

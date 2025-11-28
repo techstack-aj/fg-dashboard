@@ -12,6 +12,11 @@ const resources = {
             "export_success": "{{count}} Indizes exportiert",
             "delete_success": "{{count}} Indizes gelöscht",
 
+            // Plural Keys (Kapitel 7.4)
+            "indices_found_zero": "Keine Indizes gefunden",
+            "indices_found_one": "{{count}} Index gefunden",
+            "indices_found_other": "{{count}} Indizes gefunden",
+
             // App Header
             "fear_greed_dashboard": "Fear & Greed Dashboard",
             "switch_light": "⚪ Switch Light",
@@ -134,6 +139,11 @@ const resources = {
             "last_updated": "Last updated: {{date}}",
             "export_success": "{{count}} indices exported",
             "delete_success": "{{count}} indices deleted",
+
+            // Plural Keys (Chapter 7.4)
+            "indices_found_zero": "No indices found",
+            "indices_found_one": "{{count}} index found",
+            "indices_found_other": "{{count}} indices found",
 
             // App Header
             "fear_greed_dashboard": "Fear & Greed Dashboard",

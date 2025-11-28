@@ -550,10 +550,33 @@ export default function IndexChart({ data, height = 220 }: Props) {
 
 ---
 
-### **Schritt 2: Plural-Anzeige implementieren**
+### **Schritt 2: indices_loaded zu indices_found ersetzen**
 
 📁 **Datei:** `src/App.tsx`  
-📍 **Wo:** Zeile ~145 (direkt nach `<main className="grid md:grid-cols-2 gap-4">`)
+📍 **Wo:** Zeile ~52 (Header-Bereich)
+
+**Suche:**
+```tsx
+{category === "ALL" 
+  ? t("indices_loaded", { count: items.length })
+  : t("indices_filtered", { filtered: filtered.length, total: items.length })
+}
+```
+
+**Ersetze durch:**
+```tsx
+{category === "ALL" 
+  ? t("indices_found", { count: items.length })
+  : t("indices_filtered", { filtered: filtered.length, total: items.length })
+}
+```
+
+---
+
+### **Schritt 3: Plural-Anzeige implementieren**
+
+📁 **Datei:** `src/App.tsx`  
+📍 **Wo:** Zeile ~157 (direkt nach `<main className="grid md:grid-cols-2 gap-4">`)
 
 **Suche:**
 ```tsx
@@ -563,7 +586,7 @@ export default function IndexChart({ data, height = 220 }: Props) {
 
 **Einfügen zwischen diesen Zeilen:**
 ```tsx
-<div className="text-sm text-zinc-500 mb-4">
+<div className="col-span-full text-sm text-zinc-500 dark:text-zinc-400">
   {t("indices_found", { count: filtered.length })}
 </div>
 ```
@@ -583,4 +606,4 @@ export default function IndexChart({ data, height = 220 }: Props) {
 - [x] 7.1: i18next installiert, 80+ Keys, LanguageSwitcher
 - [x] 7.2: Interpolation (count, date, filtered/total)
 - [x] 7.3: Datum-Formatierung in Chart-Tooltip (toLocaleDateString)
-- [ ] 7.4: Pluralisierung (indices_found)
+- [x] 7.4: Pluralisierung (indices_found mit _zero/_one/_other)
