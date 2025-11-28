@@ -5,6 +5,8 @@ import GaugeRadial from "./GaugeRadial";
 import IndexChart from "./IndexChart";
 import { useTheme } from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { getCategoryTranslationKey } from "../config/categories";
 
 interface Props {
   item: IndexItem;
@@ -19,6 +21,7 @@ export default function IndexCard({
   range = "30",
   gauge = "svg",
 }: Props) {
+  const { t } = useTranslation();
   const data = useMemo(() => {
     const n = Number(range);
     if (!Number.isFinite(n)) return item.history;
@@ -33,7 +36,7 @@ export default function IndexCard({
       <div className="flex flex-col justify-between">
         <h3 className="text-lg font-semibold">{item.name}</h3>
         <div className="text-xs text-zinc-500 dark:text-zinc-400">
-          <div>{item.category}</div>
+          <div>{t(getCategoryTranslationKey(item.category))}</div>
           <div className="relative">
             <div className="flex items-center gap-1">
               <span className="truncate max-w-[140px]">
@@ -60,7 +63,7 @@ export default function IndexCard({
                   onClick={() => setShowAllTags(false)}
                   className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 underline text-xs"
                 >
-                  weniger anzeigen
+                  {t("show_less")}
                 </button>
               </div>
             )}
@@ -76,7 +79,7 @@ export default function IndexCard({
             onClick={() => onRemove(item.id)}
             className="mt-2 text-xs text-zinc-600 dark:text-zinc-300 hover:text-red-500 dark:hover:text-red-400"
           >
-            Entfernen
+            {t("remove")}
           </button>
         )}
       </div>

@@ -1,7 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Navigation: React.FC = () => {
+  const { t } = useTranslation();
   // Wir nutzen explizite Styles, um Konflikte zwischen Tailwind und MUI zu vermeiden
   const navStyle: React.CSSProperties = {
     padding: '1rem',
@@ -25,9 +27,9 @@ const Navigation: React.FC = () => {
 
   return (
     <nav style={navStyle}>
-      <NavLink to="/" style={getLinkStyle}>Original Dashboard</NavLink>
+      <NavLink to="/" style={getLinkStyle}>{t("original_dashboard")}</NavLink>
       <span style={{ color: '#ccc' }}>|</span>
-      <NavLink to="/mui" style={getLinkStyle}>MUI Dashboard</NavLink>
+      <NavLink to="/mui" style={getLinkStyle}>{t("mui_dashboard")}</NavLink>
     </nav>
   );
 };

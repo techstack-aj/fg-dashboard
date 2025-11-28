@@ -8,6 +8,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead,
 import { useIndices } from '../store/indices';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { useTranslation } from 'react-i18next';
+import { getCategoryTranslationKey } from '../config/categories';
 
 interface IndexTableProps {
   onEdit?: (id: string) => void;
@@ -17,6 +19,7 @@ type Order = 'asc' | 'desc';
 type OrderBy = 'name' | 'category' | 'value';
 
 export default function IndexTable({ onEdit }: IndexTableProps) {
+  const { t } = useTranslation();
   const { items, removeIndex } = useIndices();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -70,7 +73,7 @@ export default function IndexTable({ onEdit }: IndexTableProps) {
                   direction={orderBy === 'name' ? order : 'asc'}
                   onClick={() => handleRequestSort('name')}
                 >
-                  Name
+                  {t("name_column")}
                 </TableSortLabel>
               </TableCell>
               <TableCell>
@@ -79,7 +82,7 @@ export default function IndexTable({ onEdit }: IndexTableProps) {
                   direction={orderBy === 'category' ? order : 'asc'}
                   onClick={() => handleRequestSort('category')}
                 >
-                  Kategorie
+                  {t("category_column")}
                 </TableSortLabel>
               </TableCell>
               <TableCell>
@@ -88,18 +91,18 @@ export default function IndexTable({ onEdit }: IndexTableProps) {
                   direction={orderBy === 'value' ? order : 'asc'}
                   onClick={() => handleRequestSort('value')}
                 >
-                  Wert
+                  {t("value_column")}
                 </TableSortLabel>
               </TableCell>
-              <TableCell>Tags</TableCell>
-              <TableCell>Aktionen</TableCell>
+              <TableCell>{t("tags_column")}</TableCell>
+              <TableCell>{t("actions_column")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {sortedItems.map((index) => (
               <TableRow key={index.id}>
                 <TableCell>{index.name}</TableCell>
-                <TableCell>{index.category}</TableCell>
+                <TableCell>{t(getCategoryTranslationKey(index.category))}</TableCell>
                 <TableCell>{index.value}</TableCell>
                 <TableCell>{index.tags.join(', ')}</TableCell>
                 <TableCell>
@@ -116,15 +119,15 @@ export default function IndexTable({ onEdit }: IndexTableProps) {
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
       >
-        <DialogTitle>Index löschen?</DialogTitle>
+        <DialogTitle>{t("delete_index")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Möchten Sie diesen Index wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden.
+            {t("delete_index_confirm")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Abbrechen</Button>
-          <Button onClick={handleConfirmDelete} color="error">Löschen</Button>
+          <Button onClick={() => setDeleteDialogOpen(false)}>{t("cancel")}</Button>
+          <Button onClick={handleConfirmDelete} color="error">{t("delete")}</Button>
         </DialogActions>
       </Dialog>
     </>

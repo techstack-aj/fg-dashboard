@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useIndices } from "../store/indices";
 import type { IndexItem, IndexPoint } from "../types";
 import { computeFGI, generateHistory, pseudoRandom, seedFromName } from "../utils/fgi";
+import { useTranslation } from "react-i18next";
 
 /** sehr einfache CSV-Parsing-Funktion mit Anführungszeichen-Support */
 function parseCSV(text: string): Record<string, string>[] {
@@ -57,6 +58,7 @@ function toTags(raw: string | undefined): string[] {
 }
 
 export default function CsvImport() {
+  const { t } = useTranslation();
   const { items, setAll, addIndex } = useIndices();
   const [mode, setMode] = useState<"append" | "replace">("append");
   const [busy, setBusy] = useState(false);
@@ -124,14 +126,14 @@ export default function CsvImport() {
 
         if (mode === "replace") {
           setAll(imported);
-          setMsg(`Import erfolgreich: ${imported.length} Einträge (ersetzen).`);
+          setMsg(t("import_success", { count: imported.length, mode: t("replace_mode") }));
         } else {
           // append
           imported.forEach(it => addIndex(it.name, it.category, it.tags));
-          setMsg(`Import erfolgreich: ${imported.length} Einträge (anhängen).`);
+          setMsg(t("import_success", { count: imported.length, mode: t("append_mode") }));
         }
       } catch (err: any) {
-        setMsg(`Import-Fehler: ${err?.message ?? String(err)}`);
+        setMsg(t("import_error", { message: err?.message ?? String(err) }));
       } finally {
         setBusy(false);
         e.target.value = ""; // gleiche Datei erneut wählbar
@@ -139,14 +141,14 @@ export default function CsvImport() {
     };
     reader.onerror = () => {
       setBusy(false);
-      setMsg("Datei konnte nicht gelesen werden.");
+      setMsg(t("file_read_error"));
     };
     reader.readAsText(file);
   };
 
   return (
     <label className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700">
-      {busy ? "Importiere…" : "Import CSV"}
+      {busy ? t("importing") : t("import_csv")}
       <input
         type="file"
         accept=".csv,text/csv"
@@ -159,10 +161,10 @@ export default function CsvImport() {
           value={mode}
           onChange={(e) => setMode(e.target.value as any)}
           className="px-2 py-1 rounded-lg bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
-          title="Import-Modus"
+          title={t("import_mode")}
         >
-          <option value="append">Anfügen</option>
-          <option value="replace">Ersetzen</option>
+          <option value="append">{t("append")}</option>
+          <option value="replace">{t("replace")}</option>
         </select>
         {msg && <span>{msg}</span>}
       </div>

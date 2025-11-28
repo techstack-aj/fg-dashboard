@@ -1,0 +1,21 @@
+{
+  "_comment": "Deutsche Übersetzungen für das Fear & Greed Dashboard",
+  
+  "_instructions": {
+    "structure": "Organisiere Übersetzungen hierarchisch nach Funktionsbereichen",
+    "naming": "Nutze sprechende Keys: 'nav.dashboard' statt 'text1'",
+    "interpolation": "Platzhalter mit {{variableName}} definieren",
+    "plural": "Für Pluralisierung: key_one, key_other als separate Keys"
+  },
+  
+  "_example_keys": {
+    "welcome": "Willkommen",
+    "greeting": "Hallo {{name}}!",
+    "nav": {
+      "dashboard": "Dashboard",
+      "settings": "Einstellungen"
+    },
+    "index_count_one": "{{count}} Index",
+    "index_count_other": "{{count}} Indizes"
+  }
+}

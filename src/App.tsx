@@ -1,16 +1,17 @@
-import React, { useMemo, useState, useEffect } from "react";
-import ReactDOM from "react-dom/client";
+import { useMemo, useState, useEffect } from "react";
 import AddIndexDialog from "./components/AddIndexDialog";
 import { useIndices } from "./store/indices";
 import IndexCard from "./components/IndexCard";
 import CsvImport from "./components/CsvImport";
 import { exportAllAsCSV } from "./utils/export";
 import { useTheme } from "./context/ThemeContext";
-import { ALL_CATEGORIES, INDEX_CATEGORIES } from "./config/categories";
+import { INDEX_CATEGORIES, getCategoryTranslationKey } from "./config/categories";
 import DashboardToggle from "./components/DashboardToggle";
-
+import LanguageSwitcher from "./components/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 export default function App() {
+  const { t } = useTranslation();
   const { items, addIndex, removeIndex, recompute, undo, redo } = useIndices();
   const [query, setQuery] = useState("");
   const [range, setRange] = useState<"7" | "30" | "90">("30");
@@ -28,7 +29,7 @@ export default function App() {
   }, [items, query, category]);
 
   const handelRemoveAll = () => {
-    if (window.confirm("Alle Einträge wirklich entfernen?")) {
+    if (window.confirm(t("delete_all_confirm"))) {
       items.forEach(i => removeIndex(i.id));
     }
   }
@@ -42,52 +43,53 @@ export default function App() {
   return (
   <div className="max-w-6xl mx-auto p-6 space-y-6 bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
       <header className="flex items-center gap-3 flex-wrap">
-        <h1 className="text-2xl font-bold">Fear & Greed Dashboard</h1>
+        <h1 className="text-2xl font-bold">{t("fear_greed_dashboard")}</h1>
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
         >
-          {theme === "dark" ? "⚪ Switch Light" : "⚫ Switch Dark"}
+          {theme === "dark" ? t("switch_light") : t("switch_dark")}
         </button>
         <div className="ml-auto flex items-center gap-2 flex-wrap">
+          <LanguageSwitcher />
           <button
             onClick={undo}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
-            title="Rückgängig (Undo)"
+            title={t("undo")}
           >
-            ↶ Undo
+            {t("undo")}
           </button>
           <button
             onClick={redo}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
-            title="Wiederholen (Redo)"
+            title={t("redo")}
           >
-            ↷ Redo
+            {t("redo")}
           </button>
           <select
             value={gauge}
             onChange={(e) => setGauge(e.target.value as any)}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
-            <option value="svg">Gauge: SVG</option>
-            <option value="radial">Gauge: Radial</option>
+            <option value="svg">{t("gauge_svg")}</option>
+            <option value="radial">{t("gauge_radial")}</option>
           </select>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
-            <option value="ALL">{ALL_CATEGORIES}</option>
-            {INDEX_CATEGORIES.map((category) => (
-              <option key={category} value={category}>
-                {category}
+            <option value="ALL">{t("all_categories")}</option>
+            {INDEX_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {t(getCategoryTranslationKey(cat))}
               </option>
             ))}
           </select>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Suchen…"
+            placeholder={t("search_placeholder")}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           />
           <select
@@ -95,15 +97,15 @@ export default function App() {
             onChange={(e) => setRange(e.target.value as any)}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
-            <option value="7">7 Tage</option>
-            <option value="30">30 Tage</option>
-            <option value="90">90 Tage (Dummy)</option>
+            <option value="7">{t("7_days")}</option>
+            <option value="30">{t("30_days")}</option>
+            <option value="90">{t("90_days")}</option>
           </select>
           <button
-            onClick={() => recompute()}
+            onClick={() => recompute(undefined)}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
-            Neu berechnen
+            {t("recompute")}
           </button>
           <AddIndexDialog onAdd={addIndex} />
           <CsvImport />
@@ -111,13 +113,13 @@ export default function App() {
             onClick={() => exportAllAsCSV(items)}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
-            Export CSV
+            {t("export_csv")}
           </button>
           <button
             onClick={() => handelRemoveAll()}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
-            Alles entfernen
+            {t("delete_all")}
           </button>
         </div>
       </header>

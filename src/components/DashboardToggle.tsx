@@ -1,8 +1,10 @@
 // DashboardToggle.tsx - Wechsel zwischen Original und MUI Dashboard
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardToggle() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -39,9 +41,9 @@ export default function DashboardToggle() {
     <button
       onClick={toggleDashboard}
       style={buttonStyle}
-      title={`Wechsel zu ${isMUI ? 'Original' : 'MUI'} Dashboard`}
+      title={isMUI ? t("switch_to_original_title") : t("switch_to_mui_title")}
     >
-      {isMUI ? '🎨 → Original' : '🎨 → MUI'}
+      {isMUI ? t("switch_to_original") : t("switch_to_mui")}
     </button>
   );
 }
