@@ -8,7 +8,8 @@ import { Dialog, DialogTitle, DialogContent, TextField,
   DialogActions, Button, MenuItem, Select, InputLabel,
   FormControl } from '@mui/material';
 import { useIndices } from '../store/indices';
-import { CATEGORIES } from '../config/categories';
+import { CATEGORIES, getCategoryTranslationKey } from '../config/categories';
+import { useTranslation } from 'react-i18next';
 
 interface IndexDialogProps {
   open: boolean;
@@ -19,6 +20,7 @@ interface IndexDialogProps {
 }
 
 export default function IndexDialog({ open, onClose, mode, initialData, onSuccess }: IndexDialogProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [category, setCategory] = useState<Category>('Aktien');
   const [value, setValue] = useState(50);
@@ -57,27 +59,27 @@ export default function IndexDialog({ open, onClose, mode, initialData, onSucces
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-        <DialogTitle>{mode === 'create' ? 'Index erstellen' : 'Index bearbeiten'}</DialogTitle>
+        <DialogTitle>{mode === 'create' ? t("create_index") : t("edit_index")}</DialogTitle>
         <DialogContent>
           <TextField
-            label="Name"
+            label={t("name")}
             value={name}
             onChange={(e) => setName(e.target.value)}
             fullWidth
             margin="normal"
           />
           <FormControl fullWidth margin="normal">
-            <InputLabel id="category-label">Kategorie</InputLabel>
+            <InputLabel id="category-label">{t("category")}</InputLabel>
             <Select labelId="category-label" value={category} onChange={(e) => setCategory(e.target.value)}>
-              {CATEGORIES.map((cat) => (
-                <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+              {CATEGORIES.filter(c => c !== "Alle Kategorien").map((cat) => (
+                <MenuItem key={cat} value={cat}>{t(getCategoryTranslationKey(cat))}</MenuItem>
               ))}
             </Select>
           </FormControl>
 
           <TextField
-            label="Tags"
-            placeholder="Tags mit Komma trennen (z.B. crypto, volatile)"
+            label={t("tags_input_label")}
+            placeholder={t("tags_input_placeholder")}
             value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
             onBlur={() => {
@@ -90,9 +92,9 @@ export default function IndexDialog({ open, onClose, mode, initialData, onSucces
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Abbrechen</Button>
+          <Button onClick={onClose}>{t("cancel")}</Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">
-            {mode === 'create' ? 'Erstellen' : 'Speichern'}
+            {mode === 'create' ? t("create") : t("save")}
           </Button>
         </DialogActions>
       </Dialog>

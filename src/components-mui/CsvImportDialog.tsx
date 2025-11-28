@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { useIndices } from '../store/indices';
+import { useTranslation } from 'react-i18next';
 
 interface CsvImportDialogProps {
   open: boolean;
@@ -28,6 +29,7 @@ interface CsvImportDialogProps {
 type DuplicateAction = 'skip' | 'import-anyway' | 'replace';
 
 export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportDialogProps) {
+  const { t } = useTranslation();
   const { items, addIndex, removeIndex } = useIndices();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,7 +60,10 @@ export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportD
       imported++;
     }
 
-    setSuccess(`${imported} Indizes importiert${skipped > 0 ? `, ${skipped} übersprungen` : ''}!`);
+    setSuccess(t("indices_imported", { 
+      count: imported, 
+      skipped: skipped > 0 ? t("indices_skipped", { count: skipped }) : "" 
+    }));
     onSuccess?.();
     setShowDuplicateDialog(false);
     setPendingImport([]);
@@ -82,7 +87,7 @@ export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportD
       const lines = text.split('\n').filter(l => l.trim());
       
       if (lines.length < 2) {
-        throw new Error('CSV muss mindestens Header und eine Datenzeile enthalten');
+        throw new Error(t("csv_min_lines_error"));
       }
 
       // Parse CSV mit Anführungszeichen-Support
@@ -145,7 +150,7 @@ export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportD
           addIndex(item.name, item.category, item.tags);
           imported++;
         }
-        setSuccess(`${imported} Indizes erfolgreich importiert!`);
+        setSuccess(t("indices_imported", { count: imported, skipped: "" }));
         onSuccess?.();
         setTimeout(() => {
           onClose();
@@ -153,7 +158,7 @@ export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportD
         }, 2000);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Fehler beim Importieren');
+      setError(err instanceof Error ? err.message : t("import_error", { message: "Unknown error" }));
       setLoading(false);
     }
   };
@@ -169,11 +174,11 @@ export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportD
   return (
     <>
       <Dialog open={open && !showDuplicateDialog} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>CSV Import</DialogTitle>
+        <DialogTitle>{t("csv_import_title")}</DialogTitle>
         <DialogContent>
           <Box sx={{ py: 2 }}>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              CSV-Format: name,category,tags (mit Semikolon getrennt)
+              {t("csv_import_description")}
             </Typography>
             
             {error && (
@@ -195,7 +200,7 @@ export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportD
               disabled={loading}
               fullWidth
             >
-              CSV Datei auswählen
+              {t("upload_file")}
               <input
                 type="file"
                 hidden
@@ -209,16 +214,16 @@ export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportD
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} disabled={loading}>
-            Schließen
+            {t("close")}
           </Button>
         </DialogActions>
       </Dialog>
 
       <Dialog open={showDuplicateDialog} onClose={() => {}} maxWidth="sm" fullWidth>
-        <DialogTitle>Duplikate gefunden</DialogTitle>
+        <DialogTitle>{t("duplicate_handling")}</DialogTitle>
         <DialogContent>
           <Typography variant="body2" sx={{ mb: 2 }}>
-            Folgende {duplicateNames.length} Index-Namen existieren bereits:
+            {duplicateNames.length} {t("duplicate_handling")}
           </Typography>
           
           <Alert severity="warning" sx={{ mb: 2 }}>
@@ -226,7 +231,7 @@ export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportD
           </Alert>
           
           <FormControl component="fieldset">
-            <FormLabel component="legend">Wie soll verfahren werden?</FormLabel>
+            <FormLabel component="legend">{t("duplicate_handling")}</FormLabel>
             <RadioGroup
               value={duplicateAction}
               onChange={(e) => setDuplicateAction(e.target.value as DuplicateAction)}
@@ -234,17 +239,17 @@ export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportD
               <FormControlLabel 
                 value="skip" 
                 control={<Radio />} 
-                label="Duplikate überspringen (nur neue importieren)" 
+                label={t("skip_duplicates")} 
               />
               <FormControlLabel 
                 value="replace" 
                 control={<Radio />} 
-                label="Bestehende ersetzen" 
+                label={t("replace_duplicates")} 
               />
               <FormControlLabel 
                 value="import-anyway" 
                 control={<Radio />} 
-                label="Trotzdem importieren (separate Karten)" 
+                label={t("import_anyway")} 
               />
             </RadioGroup>
           </FormControl>
@@ -254,10 +259,10 @@ export default function CsvImportDialog({ open, onClose, onSuccess }: CsvImportD
             setShowDuplicateDialog(false);
             setPendingImport([]);
           }}>
-            Abbrechen
+            {t("cancel")}
           </Button>
           <Button onClick={performImport} variant="contained">
-            Importieren
+            {t("import_csv")}
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,0 +1,21 @@
+{
+  "_comment": "English translations for Fear & Greed Dashboard",
+  
+  "_instructions": {
+    "structure": "Organize translations hierarchically by feature area",
+    "naming": "Use descriptive keys: 'nav.dashboard' not 'text1'",
+    "interpolation": "Define placeholders with {{variableName}}",
+    "plural": "For pluralization: use key_one, key_other as separate keys"
+  },
+  
+  "_example_keys": {
+    "welcome": "Welcome",
+    "greeting": "Hello {{name}}!",
+    "nav": {
+      "dashboard": "Dashboard",
+      "settings": "Settings"
+    },
+    "index_count_one": "{{count}} index",
+    "index_count_other": "{{count}} indices"
+  }
+}

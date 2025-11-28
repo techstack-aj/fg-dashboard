@@ -20,8 +20,10 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import DashboardToggle from './components/DashboardToggle';
 import { useTheme } from './context/ThemeContext';
 import { exportAllAsCSV } from './utils/export';
+import { useTranslation } from 'react-i18next';
 
 export default function AppMUI() {
+  const { t } = useTranslation();
   const { items } = useIndices();
   const { theme: themeMode, setTheme } = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -60,7 +62,7 @@ export default function AppMUI() {
     exportAllAsCSV(items);
     setSnackbar({
       open: true,
-      message: 'CSV Export erfolgreich!',
+      message: t("csv_export_success"),
       severity: 'success'
     });
   };
@@ -81,7 +83,7 @@ export default function AppMUI() {
             }}
             variant="contained"
           >
-            Neuer Index
+            {t("add_new_index")}
           </Button>
           
           <Button 
@@ -89,7 +91,7 @@ export default function AppMUI() {
             onClick={handleExport}
             variant="outlined"
           >
-            CSV Export
+            {t("export_csv")}
           </Button>
           
           <Button 
@@ -97,7 +99,7 @@ export default function AppMUI() {
             onClick={() => setCsvImportOpen(true)}
             variant="outlined"
           >
-            CSV Import
+            {t("import_csv")}
           </Button>
           
           <IconButton 
@@ -120,7 +122,7 @@ export default function AppMUI() {
         onSuccess={(action) => {
           setSnackbar({
             open: true,
-            message: action === 'create' ? 'Index erfolgreich erstellt!' : 'Index erfolgreich aktualisiert!',
+            message: action === 'create' ? t("index_created_success") : t("index_updated_success"),
             severity: 'success'
           });
         }}
@@ -147,7 +149,7 @@ export default function AppMUI() {
         onSuccess={() => {
           setSnackbar({
             open: true,
-            message: 'CSV Import erfolgreich!',
+            message: t("csv_import_success_short"),
             severity: 'success'
           });
         }}
