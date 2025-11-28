@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import AddIndexDialog from "./components/AddIndexDialog";
 import { useIndices } from "./store/indices";
 import IndexCard from "./components/IndexCard";
@@ -19,6 +19,10 @@ export default function App() {
   const [gauge, setGauge] = useState<"svg" | "radial">("svg");
   const { theme, setTheme } = useTheme();
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+
+  const handleRemoveIndex = useCallback((id: string) => {
+    removeIndex(id);
+  }, [removeIndex]);
 
   const filtered = useMemo(() => {
     return items.filter(
@@ -160,7 +164,7 @@ export default function App() {
           <IndexCard
             key={i.id}
             item={i}
-            onRemove={removeIndex}
+            onRemove={handleRemoveIndex}
             range={range}
             gauge={gauge}
           />
