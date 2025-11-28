@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const MyButton = ({ label, onClick } : { label: string, onClick: () => void }) => {
  
     return (
