@@ -441,50 +441,87 @@ const handelRemoveAll = () => {
 
 ## **Kapitel 7.3: Werte formatieren**
 
-### **Schritt 1: i18n in IndexCard importieren**
+### **Schritt 1: i18n in IndexChart importieren**
 
-📁 **Datei:** `src/components/IndexCard.tsx`  
-📍 **Wo:** Am Anfang der Komponente
+📁 **Datei:** `src/components/IndexChart.tsx`  
+📍 **Wo:** Import-Bereich
 
-**Suche:**
+**Einfügen:**
 ```tsx
-export default function IndexCard({ item, onRemove, range, gauge }: IndexCardProps) {
-  const { t } = useTranslation();
-```
-
-**Ersetze durch:**
-```tsx
-export default function IndexCard({ item, onRemove, range, gauge }: IndexCardProps) {
-  const { t, i18n } = useTranslation();
+import { useTranslation } from "react-i18next";
 ```
 
 ---
 
-### **Schritt 2: FGI-Wert formatieren**
+### **Schritt 2: Custom Tooltip mit Datums-Formatierung**
 
-📁 **Datei:** `src/components/IndexCard.tsx`  
-📍 **Wo:** Zeile ~45 (wo der FGI-Wert angezeigt wird)
+📁 **Datei:** `src/components/IndexChart.tsx`  
+📍 **Wo:** In der Komponente
 
-**Suche (ähnlich wie):**
+**Hinzufügen:**
 ```tsx
-<div className="text-4xl font-bold">{item.fgi.toFixed(1)}</div>
+export default function IndexChart({ data, height = 220 }: Props) {
+  const { i18n } = useTranslation();
+
+  const formatDate = React.useCallback((dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString(i18n.language, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }, [i18n.language]);
+
+  const CustomTooltip = React.useCallback(({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const point = payload[0].payload as IndexPoint;
+      return (
+        <div style={{
+          background: "#18181b",
+          border: "1px solid #27272a",
+          padding: "8px 12px",
+          borderRadius: "6px",
+          color: "#fafafa"
+        }}>
+          <div style={{ fontSize: "12px", marginBottom: "4px" }}>
+            {formatDate(point.date)}
+          </div>
+          <div style={{ fontSize: "14px", fontWeight: "bold" }}>
+            {point.value}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }, [formatDate]);
 ```
 
-**Ersetze durch:**
+---
+
+### **Schritt 3: dataKey korrigieren**
+
+📁 **Datei:** `src/components/IndexChart.tsx`  
+📍 **Wo:** In LineChart
+
+**Vorher:**
 ```tsx
-<div className="text-4xl font-bold">
-  {new Intl.NumberFormat(i18n.language, { 
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1 
-  }).format(item.fgi)}
-</div>
+<XAxis dataKey="t" hide tick={{ fontSize: 12 }} />
+<Line type="monotone" dataKey="v" dot={false} strokeWidth={2} />
+```
+
+**Nachher:**
+```tsx
+<XAxis dataKey="date" hide tick={{ fontSize: 12 }} />
+<Tooltip content={<CustomTooltip />} />
+<Line type="monotone" dataKey="value" dot={false} strokeWidth={2} />
 ```
 
 ---
 
 ### **Test:**
+- Hover über Chart-Punkt
 - Sprachwechsel DE → EN
-- Dezimaltrennzeichen ändert sich (Komma vs. Punkt)
+- DE: "5. Nov. 2025", EN: "Nov 5, 2025"
 
 ---
 
@@ -545,5 +582,5 @@ export default function IndexCard({ item, onRemove, range, gauge }: IndexCardPro
 
 - [x] 7.1: i18next installiert, 80+ Keys, LanguageSwitcher
 - [x] 7.2: Interpolation (count, date, filtered/total)
-- [ ] 7.3: Zahlen-Formatierung (Intl.NumberFormat)
+- [x] 7.3: Datum-Formatierung in Chart-Tooltip (toLocaleDateString)
 - [ ] 7.4: Pluralisierung (indices_found)
