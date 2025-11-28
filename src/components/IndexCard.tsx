@@ -15,7 +15,7 @@ interface Props {
   gauge?: "svg" | "radial";
 }
 
-export default function IndexCard({
+const IndexCard = function IndexCard({
   item,
   onRemove,
   range = "30",
@@ -92,4 +92,6 @@ export default function IndexCard({
       </div>
     </div>
   );
-}
+};
+
+export default React.memo(IndexCard);
