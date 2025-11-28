@@ -22,289 +22,528 @@ Wir nutzen **react-i18next**, die populärste i18n-Lösung für React, die auf d
 
 ## **Kapitel 7.1: Einsatz von react-i18next** ✅ **ABGESCHLOSSEN**
 
-In diesem Schritt richten wir die grundlegende i18n-Infrastruktur ein.
-
-### **Schritt 1: Pakete installieren** ✅
+### **Schritt 1: Pakete installieren**
 ```bash
 npm install react-i18next i18next i18next-browser-languagedetector
 ```
 
-**Erklärung der Pakete:**
-- `i18next`: Core-Framework für Internationalisierung
-- `react-i18next`: React-Integration mit Hooks
-- `i18next-browser-languagedetector`: Erkennt automatisch die Browser-Sprache
+### **Schritt 2: i18n-Konfiguration erstellen**
 
-### **Schritt 2: i18n-Konfiguration erstellen** ✅
+📁 **Neue Datei erstellen:** `src/i18n/config.ts`
 
-**Datei:** `src/i18n/config.ts`
+```typescript
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
-Die Konfiguration wurde erstellt mit:
-- Über 80 Translation Keys (deutsch/englisch)
-- Language Detector aktiviert
-- Default-Sprache: Deutsch (`lng: "de"`)
-- Fallback-Sprache: Englisch (`fallbackLng: "en"`)
-- Debug-Modus aktiviert für Entwicklung
+const resources = {
+    de: {
+        translation: {
+            // App Header
+            "fear_greed_dashboard": "Fear & Greed Dashboard",
+            "switch_light": "⚪ Switch Light",
+            "switch_dark": "⚫ Switch Dark",
+            "undo": "↶ Undo",
+            "redo": "↷ Redo",
+            "gauge_svg": "Gauge: SVG",
+            "gauge_radial": "Gauge: Radial",
+            "all_categories": "ALLE",
+            "search_placeholder": "Suchen…",
+            
+            // Categories
+            "category_aktien": "Aktien",
+            "category_indizes": "Indizes",
+            "category_crypto": "Crypto",
+            "category_rohstoffe": "Rohstoffe",
+            "category_custom": "Custom",
+            
+            "7_days": "7 Tage",
+            "30_days": "30 Tage",
+            "90_days": "90 Tage (Dummy)",
+            "recompute": "Neu berechnen",
+            "export_csv": "Export CSV",
+            "delete_all": "Alle löschen",
+            "delete_all_confirm": "Alle Einträge wirklich entfernen?",
+            
+            // AddIndexDialog
+            "new_index": "Neuer Index",
+            "add_new_index": "+ Neuer Index",
+            "name": "Name",
+            "name_placeholder": "z. B. Tesla",
+            "category": "Kategorie",
+            "tags": "Tags",
+            "tags_label": "Tags (Komma-getrennt)",
+            "tags_placeholder": "Krypto, Momentum",
+            "add": "Hinzufügen",
+            "cancel": "Abbrechen",
+            
+            // IndexCard
+            "remove": "Entfernen",
+            "show_less": "weniger anzeigen",
+        }
+    },
+    en: {
+        translation: {
+            // App Header
+            "fear_greed_dashboard": "Fear & Greed Dashboard",
+            "switch_light": "⚪ Switch Light",
+            "switch_dark": "⚫ Switch Dark",
+            "undo": "↶ Undo",
+            "redo": "↷ Redo",
+            "gauge_svg": "Gauge: SVG",
+            "gauge_radial": "Gauge: Radial",
+            "all_categories": "ALL",
+            "search_placeholder": "Search…",
+            
+            // Categories
+            "category_aktien": "Stocks",
+            "category_indizes": "Indices",
+            "category_crypto": "Crypto",
+            "category_rohstoffe": "Commodities",
+            "category_custom": "Custom",
+            
+            "7_days": "7 Days",
+            "30_days": "30 Days",
+            "90_days": "90 Days (Dummy)",
+            "recompute": "Recompute",
+            "export_csv": "Export CSV",
+            "delete_all": "Delete All",
+            "delete_all_confirm": "Really remove all entries?",
+            
+            // AddIndexDialog
+            "new_index": "New Index",
+            "add_new_index": "+ New Index",
+            "name": "Name",
+            "name_placeholder": "e.g. Tesla",
+            "category": "Category",
+            "tags": "Tags",
+            "tags_label": "Tags (comma-separated)",
+            "tags_placeholder": "Crypto, Momentum",
+            "add": "Add",
+            "cancel": "Cancel",
+            
+            // IndexCard
+            "remove": "Remove",
+            "show_less": "show less",
+        }
+    }
+};
 
-**Wichtige Config-Optionen:**
-- `resources`: Objekt mit allen Übersetzungen pro Sprache
-- `lng`: Standard-Sprache (z.B. "de")
-- `fallbackLng`: Fallback, wenn Übersetzung fehlt
-- `interpolation.escapeValue`: Bei React immer `false` (XSS-Schutz bereits vorhanden)
+i18n
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+        resources,
+        lng: "de",
+        fallbackLng: "en",
+        interpolation: {
+            escapeValue: false
+        },
+        debug: true
+    });
 
-### **Schritt 3: Übersetzungsstruktur** ✅
+export default i18n;
+```
 
-**Implementierung:** Übersetzungen direkt in `config.ts` als JavaScript-Objekt eingebettet.
+**Hinweis:** Dies ist ein gekürztes Beispiel. Die komplette config.ts hat über 80 Translation Keys.
 
-Die Translation Keys sind nach Bereichen organisiert:
-- App Header (Dashboard, Buttons, Controls)
-- Dialoge (AddIndexDialog, IndexDialog)
-- Komponenten (IndexCard, Navigation, CsvImport)
-- MUI-Komponenten (IndexTable, CsvImportDialog)
-- Pages (NotFound, IndexDetail)
-- **Kategorien** (Aktien → Stocks, Indizes → Indices, etc.)
+### **Schritt 3: In App einbinden**
 
-### **Schritt 4: i18n in die App einbinden** ✅
+📁 **Datei:** `src/main.tsx`  
+📍 **Zeile 1-5** (ganz oben, vor anderen Imports)
 
-In `src/main.tsx`:
-```tsx
+**Hinzufügen:**
+```typescript
 import './i18n/config';
 ```
 
-Nach dem Import ist i18next global verfügbar.
-
-### **Schritt 5: Texte übersetzen** ✅
-
-**Alle Komponenten wurden übersetzt:**
-- ✅ App.tsx - Header, alle Buttons, Selects, Placeholders
-- ✅ AddIndexDialog.tsx - vollständig übersetzt
-- ✅ IndexCard.tsx - inklusive Kategorien
-- ✅ CsvImport.tsx - Status, Modi, Fehlermeldungen
-- ✅ Navigation.tsx - Dashboard-Links
-- ✅ DashboardToggle.tsx - Switch-Buttons
-- ✅ App-MUI.tsx - MUI-Dashboard
-- ✅ IndexDialog.tsx - Create/Edit Dialog
-- ✅ IndexTable.tsx - Table mit übersetzten Kategorien
-- ✅ CsvImportDialog.tsx - Import Dialog
-- ✅ NotFound.tsx - 404-Seite
-- ✅ IndexDetail.tsx - Detail-Ansicht
-
-**Bonus: LanguageSwitcher-Komponente erstellt:**
-```tsx
-import { useTranslation } from 'react-i18next';
-
-const { t, i18n } = useTranslation();
-// Sprachwechsel: i18n.changeLanguage('en')
+**Vollständiger Kontext:**
+```typescript
+import './i18n/config';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
 ```
 
-Der LanguageSwitcher ist oben rechts integriert (🇩🇪 DE / 🇬🇧 EN) und ermöglicht Live-Sprachwechsel.
+### **Schritt 4: useTranslation Hook nutzen**
 
-**Test:** Klicke auf den Switcher - alle Texte (inkl. Kategorien) wechseln sofort! ✅
+📁 **Datei:** `src/App.tsx`  
+📍 **Zeile 11** (bei den Imports)
+
+**Hinzufügen:**
+```typescript
+import { useTranslation } from "react-i18next";
+```
+
+📍 **Zeile 14** (erste Zeile in der Komponente)
+
+**Hinzufügen:**
+```typescript
+const { t } = useTranslation();
+```
+
+**Vollständiger Kontext:**
+```typescript
+export default function App() {
+  const { t } = useTranslation();
+  const { items, addIndex, removeIndex, recompute, undo, redo } = useIndices();
+  const [query, setQuery] = useState("");
+```
+
+### **Schritt 5: Texte übersetzen**
+
+📁 **Datei:** `src/App.tsx`  
+📍 **Zeile ~45** (Dashboard-Titel)
+
+**Vorher:**
+```tsx
+<h1 className="text-2xl font-bold">Fear & Greed Dashboard</h1>
+```
+
+**Nachher:**
+```tsx
+<h1 className="text-2xl font-bold">{t("fear_greed_dashboard")}</h1>
+```
+
+📍 **Zeile ~50** (Theme-Button)
+
+**Vorher:**
+```tsx
+{theme === "dark" ? "⚪ Switch Light" : "⚫ Switch Dark"}
+```
+
+**Nachher:**
+```tsx
+{theme === "dark" ? t("switch_light") : t("switch_dark")}
+```
+
+📍 **Zeile ~85** (Kategorie-Select)
+
+**Vorher:**
+```tsx
+<option value="ALL">ALLE</option>
+```
+
+**Nachher:**
+```tsx
+<option value="ALL">{t("all_categories")}</option>
+```
+
+**Hinweis:** Alle weiteren Komponenten (AddIndexDialog, IndexCard, etc.) werden nach dem gleichen Muster übersetzt.
 
 ---
 
-## **Kapitel 7.2: Platzhalter verwenden (Interpolation)**
+## **Kapitel 7.2: Platzhalter verwenden (Interpolation)** ✅ **ABGESCHLOSSEN**
 
-Oft benötigst du dynamische Werte in Übersetzungen, z.B. Benutzernamen oder Zahlen.
+### **Schritt 1: Translation Keys hinzufügen**
 
-### **Konzept: Interpolation**
+📁 **Datei:** `src/i18n/config.ts`  
+📍 **Wo:** Im `de: { translation: {` Block, nach den bestehenden Keys
 
-In der Übersetzung:
-```json
-{
-  "greeting": "Hallo {{name}}, du hast {{count}} neue Nachrichten"
+**Einfügen:**
+```typescript
+"indices_loaded": "{{count}} Indizes geladen",
+"indices_filtered": "{{filtered}} von {{total}} Indizes",
+"last_updated": "Zuletzt aktualisiert: {{date}}",
+"export_success": "{{count}} Indizes exportiert",
+"delete_success": "{{count}} Indizes gelöscht",
+```
+
+📍 **Wo:** Im `en: { translation: {` Block, nach den bestehenden Keys
+
+**Einfügen:**
+```typescript
+"indices_loaded": "{{count}} indices loaded",
+"indices_filtered": "{{filtered}} of {{total}} indices",
+"last_updated": "Last updated: {{date}}",
+"export_success": "{{count}} indices exported",
+"delete_success": "{{count}} indices deleted",
+```
+
+---
+
+### **Schritt 2: i18n zum useTranslation Hook hinzufügen**
+
+📁 **Datei:** `src/App.tsx`  
+📍 **Wo:** Zeile 14 (Anfang der Komponente)
+
+**Suche:**
+```tsx
+const { t } = useTranslation();
+```
+
+**Ersetze durch:**
+```tsx
+const { t, i18n } = useTranslation();
+```
+
+---
+
+### **Schritt 3: lastUpdate State hinzufügen**
+
+📁 **Datei:** `src/App.tsx`  
+📍 **Wo:** Zeile 20 (nach den anderen useState)
+
+**Suche:**
+```tsx
+const { theme, setTheme } = useTheme();
+
+const filtered = useMemo(() => {
+```
+
+**Einfügen zwischen diesen Zeilen:**
+```tsx
+const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+```
+
+---
+
+### **Schritt 4: Indizes-Anzahl im Header anzeigen**
+
+📁 **Datei:** `src/App.tsx`  
+📍 **Wo:** Zeile 46 (direkt nach `<h1>`)
+
+**Suche:**
+```tsx
+<h1 className="text-2xl font-bold">{t("fear_greed_dashboard")}</h1>
+<button
+```
+
+**Einfügen zwischen diesen Zeilen:**
+```tsx
+<span className="text-sm text-zinc-600 dark:text-zinc-400">
+  {category === "ALL" 
+    ? t("indices_loaded", { count: items.length })
+    : t("indices_filtered", { filtered: filtered.length, total: items.length })
+  }
+</span>
+```
+
+---
+
+### **Schritt 5: Letzte Aktualisierung anzeigen**
+
+📁 **Datei:** `src/App.tsx`  
+📍 **Wo:** Zeile 135 (zwischen `</header>` und `<main>`)
+
+**Suche:**
+```tsx
+    </header>
+
+    <main className="grid md:grid-cols-2 gap-4">
+```
+
+**Einfügen zwischen diesen Zeilen:**
+```tsx
+<div className="text-sm text-zinc-500 dark:text-zinc-400">
+  {t("last_updated", { 
+    date: lastUpdate.toLocaleDateString(i18n.language, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  })}
+</div>
+```
+
+---
+
+### **Schritt 6: setLastUpdate bei recompute hinzufügen**
+
+📁 **Datei:** `src/App.tsx`  
+📍 **Wo:** Zeile 107 (recompute Button)
+
+**Suche:**
+```tsx
+<button
+  onClick={() => recompute(undefined)}
+  className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
+>
+```
+
+**Ersetze durch:**
+```tsx
+<button
+  onClick={() => {
+    recompute(undefined);
+    setLastUpdate(new Date());
+  }}
+  className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
+>
+```
+
+---
+
+### **Schritt 7: Export-Bestätigung hinzufügen**
+
+📁 **Datei:** `src/App.tsx`  
+📍 **Wo:** Zeile 122 (Export Button)
+
+**Suche:**
+```tsx
+<button
+  onClick={() => exportAllAsCSV(items)}
+  className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
+>
+```
+
+**Ersetze durch:**
+```tsx
+<button
+  onClick={() => {
+    exportAllAsCSV(items);
+    alert(t("export_success", { count: items.length }));
+  }}
+  className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
+>
+```
+
+---
+
+### **Schritt 8: Delete-Bestätigung hinzufügen**
+
+📁 **Datei:** `src/App.tsx`  
+📍 **Wo:** Zeile 32 (handelRemoveAll Funktion)
+
+**Suche:**
+```tsx
+const handelRemoveAll = () => {
+  if (window.confirm(t("delete_all_confirm"))) {
+    items.forEach(i => removeIndex(i.id));
+  }
 }
 ```
 
-Im Code:
+**Ersetze durch:**
 ```tsx
-t('greeting', { name: 'Max', count: 5 })
-// Output: "Hallo Max, du hast 5 neue Nachrichten"
+const handelRemoveAll = () => {
+  const count = items.length;
+  if (window.confirm(t("delete_all_confirm"))) {
+    items.forEach(i => removeIndex(i.id));
+    alert(t("delete_success", { count }));
+    setLastUpdate(new Date());
+  }
+}
 ```
 
-### **Anwendungsfälle:**
-- Benutzernamen in Willkommensnachrichten
-- Dynamische Zahlen (z.B. Anzahl der Indizes)
-- Variablen Datumswerte
+---
 
-### **Aufgabe:**
-- Übersetze den "Index hinzufügen"-Dialog
-- Nutze Platzhalter für die Anzahl der angezeigten Indizes
-- Teste mit verschiedenen Werten
+### **Test:**
+- Sprachwechsel (DE/EN) → alle Zahlen/Daten ändern sich
+- Filter setzen → Header zeigt "X von Y Indizes"
+- Export klicken → Alert mit Anzahl
+- Alle löschen → Alert mit Anzahl
 
 ---
 
 ## **Kapitel 7.3: Werte formatieren**
 
-Zahlen, Währungen und Daten werden je nach Sprache unterschiedlich dargestellt:
-- **Deutsch:** `1.234,56 €`
-- **Englisch:** `€1,234.56`
+### **Schritt 1: i18n in IndexCard importieren**
 
-### **i18next Formatting**
+📁 **Datei:** `src/components/IndexCard.tsx`  
+📍 **Wo:** Am Anfang der Komponente
 
-i18next bietet eingebautes Formatting über Intl-API:
-
-**In der Übersetzung:**
-```json
-{
-  "price": "Preis: {{value, currency(EUR)}}"
-}
-```
-
-**Im Code:**
+**Suche:**
 ```tsx
-t('price', { value: 1234.56 })
-// Output DE: "Preis: 1.234,56 €"
-// Output EN: "Price: €1,234.56"
+export default function IndexCard({ item, onRemove, range, gauge }: IndexCardProps) {
+  const { t } = useTranslation();
 ```
 
-### **Format-Typen:**
-- `number`: Zahlen mit Tausender-Trennzeichen
-- `currency(EUR)`: Währung mit Symbol
-- `datetime`: Datum/Zeit formatieren
-
-### **Alternative: Intl.NumberFormat direkt nutzen**
-
-Für komplexere Fälle kannst du auch direkt die Browser-API nutzen:
+**Ersetze durch:**
 ```tsx
-const formatter = new Intl.NumberFormat(i18n.language, {
-  style: 'currency',
-  currency: 'EUR'
-});
-formatter.format(1234.56);
+export default function IndexCard({ item, onRemove, range, gauge }: IndexCardProps) {
+  const { t, i18n } = useTranslation();
 ```
 
-### **Aufgabe:**
-- Formatiere FGI-Werte (0-100) mit max. 1 Dezimalstelle
-- Formatiere Datumsangaben im Dashboard
-- Teste mit DE und EN Locale
+---
+
+### **Schritt 2: FGI-Wert formatieren**
+
+📁 **Datei:** `src/components/IndexCard.tsx`  
+📍 **Wo:** Zeile ~45 (wo der FGI-Wert angezeigt wird)
+
+**Suche (ähnlich wie):**
+```tsx
+<div className="text-4xl font-bold">{item.fgi.toFixed(1)}</div>
+```
+
+**Ersetze durch:**
+```tsx
+<div className="text-4xl font-bold">
+  {new Intl.NumberFormat(i18n.language, { 
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1 
+  }).format(item.fgi)}
+</div>
+```
+
+---
+
+### **Test:**
+- Sprachwechsel DE → EN
+- Dezimaltrennzeichen ändert sich (Komma vs. Punkt)
 
 ---
 
 ## **Kapitel 7.4: Singular und Plural**
 
-Texte ändern sich je nach Anzahl:
-- **1 Index** vs. **5 Indizes**
-- **1 day ago** vs. **3 days ago**
+### **Schritt 1: Plural Translation Keys hinzufügen**
 
-### **i18next Pluralisierung**
+📁 **Datei:** `src/i18n/config.ts`  
+📍 **Wo:** Im `de: { translation: {` Block
 
-i18next unterstützt automatische Plural-Formen.
-
-**In der Übersetzung (Deutsch):**
-```json
-{
-  "index_count_one": "{{count}} Index",
-  "index_count_other": "{{count}} Indizes"
-}
+**Einfügen:**
+```typescript
+"indices_found_zero": "Keine Indizes gefunden",
+"indices_found_one": "{{count}} Index gefunden",
+"indices_found_other": "{{count}} Indizes gefunden",
 ```
 
-**In der Übersetzung (Englisch):**
-```json
-{
-  "index_count_one": "{{count}} index",
-  "index_count_other": "{{count}} indices"
-}
+📍 **Wo:** Im `en: { translation: {` Block
+
+**Einfügen:**
+```typescript
+"indices_found_zero": "No indices found",
+"indices_found_one": "{{count}} index found",
+"indices_found_other": "{{count}} indices found",
 ```
 
-**Im Code:**
+---
+
+### **Schritt 2: Plural-Anzeige implementieren**
+
+📁 **Datei:** `src/App.tsx`  
+📍 **Wo:** Zeile ~145 (direkt nach `<main className="grid md:grid-cols-2 gap-4">`)
+
+**Suche:**
 ```tsx
-t('index_count', { count: 1 })  // "1 Index"
-t('index_count', { count: 5 })  // "5 Indizes"
+<main className="grid md:grid-cols-2 gap-4">
+  {filtered.map((i) => (
 ```
 
-**Wichtig:** i18next fügt automatisch `_one`, `_other`, `_zero` etc. hinzu, je nach Sprache.
-
-### **Sprach-spezifische Plural-Regeln**
-
-Verschiedene Sprachen haben unterschiedliche Plural-Formen:
-- **Englisch:** 2 Formen (one, other)
-- **Deutsch:** 2 Formen (one, other)
-- **Polnisch:** 3 Formen (one, few, many)
-- **Arabisch:** 6 Formen!
-
-i18next behandelt das automatisch basierend auf der gewählten Sprache.
-
-### **Aufgabe:**
-- Übersetze "X Indizes gefunden"
-- Übersetze "vor X Tagen aktualisiert"
-- Teste mit count: 0, 1, 2, 5
-- Prüfe sowohl deutsche als auch englische Ausgabe
-
----
-
-## **Sprachumschalter erstellen**
-
-Damit Benutzer die Sprache manuell wechseln können:
-
+**Einfügen zwischen diesen Zeilen:**
 ```tsx
-import { useTranslation } from 'react-i18next';
-
-const LanguageSwitcher = () => {
-  const { i18n } = useTranslation();
-  
-  return (
-    <select value={i18n.language} onChange={(e) => i18n.changeLanguage(e.target.value)}>
-      <option value="de">Deutsch</option>
-      <option value="en">English</option>
-    </select>
-  );
-};
+<div className="text-sm text-zinc-500 mb-4">
+  {t("indices_found", { count: filtered.length })}
+</div>
 ```
 
-**Hinweis:** Die gewählte Sprache wird automatisch im LocalStorage gespeichert (durch Language Detector).
+---
+
+### **Test:**
+- Bei 0 Indizes: "Keine Indizes gefunden"
+- Bei 1 Index: "1 Index gefunden"
+- Bei 5 Indizes: "5 Indizes gefunden"
+- Sprachwechsel: Englische Pluralformen
 
 ---
 
-## **Best Practices**
+## **Checkliste Kapitel 7**
 
-1. **Namespaces nutzen:** Für große Apps Übersetzungen nach Features aufteilen
-   ```tsx
-   t('dashboard:welcome')  // dashboard-Namespace
-   t('settings:title')     // settings-Namespace
-   ```
-
-2. **Keine hartcodierten Texte:** Alle UI-Texte durch `t()` ersetzen
-
-3. **Sinnvolle Keys:** 
-   - ✅ `nav.dashboard`, `form.submit`, `error.network`
-   - ❌ `text1`, `label2`, `button3`
-
-4. **Fallback-Texte:** Immer eine Default-Sprache definieren
-
-5. **Kontext beachten:** 
-   - "Close" kann "Schließen" (Tür) oder "Beenden" (App) bedeuten
-   - Nutze sprechende Keys: `modal.close` vs. `app.exit`
-
----
-
-## **Checkliste für Kapitel 7**
-
-- [ ] **7.1:** react-i18next installiert und konfiguriert
-- [ ] **7.1:** Übersetzungsdateien (de/en) angelegt
-- [ ] **7.1:** Erste Komponente übersetzt (z.B. Navigation)
-- [ ] **7.1:** Sprachumschalter funktioniert
-- [ ] **7.2:** Platzhalter (Interpolation) in Übersetzungen genutzt
-- [ ] **7.2:** Dynamische Werte korrekt angezeigt
-- [ ] **7.3:** Zahlen formatiert (Tausender-Trennzeichen)
-- [ ] **7.3:** Währungen formatiert (€ Symbol)
-- [ ] **7.3:** Datumsangaben lokalisiert
-- [ ] **7.4:** Pluralisierung für mind. eine Komponente implementiert
-- [ ] **7.4:** Plural-Formen in DE und EN getestet
-
----
-
-## **Zusatz-Ressourcen**
-
-- **Offizielle Docs:** https://react.i18next.com/
-- **i18next Playground:** https://www.i18next.com/overview/getting-started
-- **Plural-Regeln:** https://www.unicode.org/cldr/charts/43/supplemental/language_plural_rules.html
-
----
-
-## **Nächste Schritte nach Kapitel 7**
-
-Nach der Internationalisierung kannst du:
-- **Testing:** Tests für übersetzte Komponenten schreiben
-- **SEO:** Server-Side Rendering mit i18n
-- **CI/CD:** Übersetzungen automatisch validieren
-- **Externe Services:** Übersetzungen mit Lokalise/Crowdin verwalten
+- [x] 7.1: i18next installiert, 80+ Keys, LanguageSwitcher
+- [x] 7.2: Interpolation (count, date, filtered/total)
+- [ ] 7.3: Zahlen-Formatierung (Intl.NumberFormat)
+- [ ] 7.4: Pluralisierung (indices_found)

@@ -11,13 +11,14 @@ import LanguageSwitcher from "./components/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 
 export default function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { items, addIndex, removeIndex, recompute, undo, redo } = useIndices();
   const [query, setQuery] = useState("");
   const [range, setRange] = useState<"7" | "30" | "90">("30");
   const [category, setCategory] = useState<"ALL" | string>("ALL");
   const [gauge, setGauge] = useState<"svg" | "radial">("svg");
   const { theme, setTheme } = useTheme();
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
   const filtered = useMemo(() => {
     return items.filter(
@@ -29,8 +30,11 @@ export default function App() {
   }, [items, query, category]);
 
   const handelRemoveAll = () => {
+    const count = items.length;
     if (window.confirm(t("delete_all_confirm"))) {
       items.forEach(i => removeIndex(i.id));
+      alert(t("delete_success", { count }));
+      setLastUpdate(new Date());
     }
   }
 
@@ -44,6 +48,12 @@ export default function App() {
   <div className="max-w-6xl mx-auto p-6 space-y-6 bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
       <header className="flex items-center gap-3 flex-wrap">
         <h1 className="text-2xl font-bold">{t("fear_greed_dashboard")}</h1>
+        <span className="text-sm text-zinc-600 dark:text-zinc-400">
+          {category === "ALL" 
+            ? t("indices_loaded", { count: items.length })
+            : t("indices_filtered", { filtered: filtered.length, total: items.length })
+          }
+        </span>
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
@@ -102,7 +112,10 @@ export default function App() {
             <option value="90">{t("90_days")}</option>
           </select>
           <button
-            onClick={() => recompute(undefined)}
+            onClick={() => {
+              recompute(undefined);
+              setLastUpdate(new Date());
+            }}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
             {t("recompute")}
@@ -110,7 +123,10 @@ export default function App() {
           <AddIndexDialog onAdd={addIndex} />
           <CsvImport />
           <button
-            onClick={() => exportAllAsCSV(items)}
+            onClick={() => {
+              exportAllAsCSV(items);
+              alert(t("export_success", { count: items.length }));
+            }}
             className="px-3 py-2 rounded-xl bg-zinc-200 text-zinc-900 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700"
           >
             {t("export_csv")}
@@ -123,6 +139,18 @@ export default function App() {
           </button>
         </div>
       </header>
+
+      <div className="text-sm text-zinc-500 dark:text-zinc-400">
+        {t("last_updated", { 
+          date: lastUpdate.toLocaleDateString(i18n.language, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        })}
+      </div>
 
       <main className="grid md:grid-cols-2 gap-4">
         {filtered.map((i) => (
