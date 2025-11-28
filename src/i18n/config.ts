@@ -5,6 +5,13 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 const resources = {
     de: {
         translation: {
+            // Interpolation Keys (Kapitel 7.2)
+            "indices_loaded": "{{count}} Indizes geladen",
+            "indices_filtered": "{{filtered}} von {{total}} Indizes",
+            "last_updated": "Zuletzt aktualisiert: {{date}}",
+            "export_success": "{{count}} Indizes exportiert",
+            "delete_success": "{{count}} Indizes gelöscht",
+
             // App Header
             "fear_greed_dashboard": "Fear & Greed Dashboard",
             "switch_light": "⚪ Switch Light",
@@ -121,6 +128,13 @@ const resources = {
     },
     en: {
         translation: {
+            // Interpolation Keys (Chapter 7.2)
+            "indices_loaded": "{{count}} indices loaded",
+            "indices_filtered": "{{filtered}} of {{total}} indices",
+            "last_updated": "Last updated: {{date}}",
+            "export_success": "{{count}} indices exported",
+            "delete_success": "{{count}} indices deleted",
+
             // App Header
             "fear_greed_dashboard": "Fear & Greed Dashboard",
             "switch_light": "⚪ Switch Light",
