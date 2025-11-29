@@ -314,7 +314,7 @@ export default React.memo(LanguageSwitcher);
 
 ---
 
-## **Kapitel 9.3: React.lazy (Code Splitting)**
+## **Kapitel 9.3: React.lazy (Code Splitting)** ✅
 
 ### **Ziel:**
 IndexDetail-Page lazy laden für kleineres initiales Bundle.
@@ -564,8 +564,8 @@ import VirtualGrid from "./components/VirtualGrid";
 ## **Checkliste Kapitel 9**
 
 - [x] 9.1: IndexCard mit React.memo + useCallback für removeIndex
-- [ ] 9.2: Barometer, GaugeRadial, Navigation, LanguageSwitcher mit React.memo
-- [ ] 9.3: IndexDetail + NotFound lazy geladen mit Suspense
+- [x] 9.2: Barometer, GaugeRadial, Navigation, LanguageSwitcher mit React.memo
+- [x] 9.3: IndexDetail + NotFound lazy geladen mit Suspense
 - [ ] 9.4: VirtualGrid für Listen >50 Items
 
 ---
