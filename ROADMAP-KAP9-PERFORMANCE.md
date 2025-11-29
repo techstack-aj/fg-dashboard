@@ -2,9 +2,16 @@
 
 In diesem Kapitel lernst du, wie du deine React-App performanter machst. Wir optimieren Re-Renders, reduzieren Bundle-Größe und verbessern die Liste-Performance mit Virtualisierung.
 
+## Fortschritt
+
+- ✅ **Kapitel 9.1: Callback-Hook** - IndexCard mit React.memo, useCallback für handleRemoveIndex
+- ✅ **Kapitel 9.2: Pure Components** - Barometer, GaugeRadial, Navigation, LanguageSwitcher mit React.memo
+- ✅ **Kapitel 9.3: React.lazy** - Code Splitting für Routes
+- ⏳ **Kapitel 9.4: Virtual Tables** - Virtualisierung mit TanStack Virtual
+
 ---
 
-## **Kapitel 9.1: Der Callback-Hook (useCallback)**
+## **Kapitel 9.1: Der Callback-Hook (useCallback)** ✅
 
 ### **Ziel:**
 Event-Handler memoizen, um unnötige Re-Renders von Child-Komponenten zu vermeiden.
@@ -133,7 +140,7 @@ const handleRemoveIndex = useCallback((id: string) => {
 
 ---
 
-## **Kapitel 9.2: Pure Components**
+## **Kapitel 9.2: Pure Components** ✅
 
 ### **Ziel:**
 Mehrere Komponenten mit React.memo optimieren. Pure Components rendern nur neu, wenn sich ihre Props ändern.
