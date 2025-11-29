@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AppMUI from './App-MUI';
 import App from './App';
+import AppVirtual from './App-Virtual';
 import Navigation from './components/Navigation';
 
 const IndexDetail = lazy(() => import('./pages/IndexDetail'));
@@ -19,6 +20,7 @@ const AppRouter: React.FC = () => {
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/mui" element={<AppMUI />} />
+          <Route path="/virtual" element={<AppVirtual />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/home" element={<Navigate to="/" replace />} />
           <Route path="/index/:id" element={<IndexDetail />} />

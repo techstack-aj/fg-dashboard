@@ -17,5 +17,9 @@
     },
     "index_count_one": "{{count}} index",
     "index_count_other": "{{count}} indices"
-  }
+  },
+  
+  "original_dashboard": "Original Dashboard",
+  "mui_dashboard": "MUI Dashboard",
+  "virtualized_list": "Virtualized List"
 }

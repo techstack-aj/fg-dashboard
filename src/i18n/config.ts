@@ -62,6 +62,7 @@ const resources = {
             // Navigation
             "original_dashboard": "Original Dashboard",
             "mui_dashboard": "MUI Dashboard",
+            "virtualized_list": "Virtualisierte Liste",
             
             // DashboardToggle
             "switch_to_original": "🎨 → Original",
@@ -190,6 +191,7 @@ const resources = {
             // Navigation
             "original_dashboard": "Original Dashboard",
             "mui_dashboard": "MUI Dashboard",
+            "virtualized_list": "Virtualized List",
             
             // DashboardToggle
             "switch_to_original": "🎨 → Original",
