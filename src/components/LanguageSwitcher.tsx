@@ -1,6 +1,7 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function LanguageSwitcher() {
+const LanguageSwitcher = function LanguageSwitcher() {
     const { i18n } = useTranslation();
 
     const changeLanguage = (lng: string) => {
@@ -33,4 +34,6 @@ export default function LanguageSwitcher() {
             </button>
         </div>
     );
-}
+};
+
+export default React.memo(LanguageSwitcher);

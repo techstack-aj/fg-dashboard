@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useIndices } from '../store/indices.ts';
 import Barometer from '../components/Barometer.tsx';
 import IndexChart from '../components/IndexChart.tsx';
+import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { getCategoryTranslationKey } from '../config/categories';
 
@@ -11,6 +12,7 @@ const IndexDetail: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { items } = useIndices();
+  const { theme, setTheme } = useTheme();
   const index = items.find(item => item.id === id);
 
   const [days, setDays] = useState(30); // Standard: 30 Tage
@@ -30,7 +32,15 @@ const IndexDetail: React.FC = () => {
         >
             ← {t("back_to_dashboard")}
         </button>
-        <div className="text-sm text-zinc-400">ID: {index.id}</div>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="px-4 py-2 bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+          >
+            {theme === "dark" ? t("switch_light") : t("switch_dark")}
+          </button>
+          <div className="text-sm text-zinc-400">ID: {index.id}</div>
+        </div>
       </div>
 
       {/* Title Section */}
