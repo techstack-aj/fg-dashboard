@@ -7,7 +7,7 @@ In diesem Kapitel lernst du, wie du deine React-App performanter machst. Wir opt
 - ✅ **Kapitel 9.1: Callback-Hook** - IndexCard mit React.memo, useCallback für handleRemoveIndex
 - ✅ **Kapitel 9.2: Pure Components** - Barometer, GaugeRadial, Navigation, LanguageSwitcher mit React.memo
 - ✅ **Kapitel 9.3: React.lazy** - Code Splitting für Routes
-- ⏳ **Kapitel 9.4: Virtual Tables** - Virtualisierung mit TanStack Virtual
+- ✅ **Kapitel 9.4: Virtual Tables** - Virtualisierung mit TanStack Virtual
 
 ---
 
@@ -386,10 +386,10 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 ---
 
-## **Kapitel 9.4: Virtuelle Tabellen (Virtualization)**
+## **Kapitel 9.4: Virtuelle Tabellen (Virtualization)** ✅
 
 ### **Ziel:**
-Große Listen (100+ Items) mit TanStack Virtual optimieren.
+Große Listen (100+ Items) mit TanStack Virtual optimieren - als separate Route.
 
 ### **Schritt 1: TanStack Virtual installieren**
 
@@ -422,7 +422,7 @@ export default function VirtualGrid({ items, onRemove, range, gauge }: Props) {
   const rowVirtualizer = useVirtualizer({
     count: Math.ceil(items.length / 2), // 2 Spalten Grid
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 220, // Geschätzte Card-Höhe
+    estimateSize: () => 250, // Geschätzte Card-Höhe + Gap
     overscan: 2, // Rendere 2 zusätzliche Rows außerhalb Viewport
   });
 
@@ -436,7 +436,6 @@ export default function VirtualGrid({ items, onRemove, range, gauge }: Props) {
           height: `${rowVirtualizer.getTotalSize()}px`,
           position: 'relative',
         }}
-        className="grid md:grid-cols-2 gap-4"
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
           const startIndex = virtualRow.index * 2;
@@ -444,27 +443,27 @@ export default function VirtualGrid({ items, onRemove, range, gauge }: Props) {
           const rowItems = items.slice(startIndex, endIndex);
 
           return (
-            <React.Fragment key={virtualRow.key}>
+            <div
+              key={virtualRow.key}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                transform: `translateY(${virtualRow.start}px)`,
+              }}
+              className="grid md:grid-cols-2 gap-4"
+            >
               {rowItems.map((item) => (
-                <div
+                <IndexCard
                   key={item.id}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    transform: `translateY(${virtualRow.start}px)`,
-                  }}
-                >
-                  <IndexCard
-                    item={item}
-                    onRemove={onRemove}
-                    range={range}
-                    gauge={gauge}
-                  />
-                </div>
+                  item={item}
+                  onRemove={onRemove}
+                  range={range}
+                  gauge={gauge}
+                />
               ))}
-            </React.Fragment>
+            </div>
           );
         })}
       </div>
@@ -475,68 +474,57 @@ export default function VirtualGrid({ items, onRemove, range, gauge }: Props) {
 
 ---
 
-### **Schritt 3: VirtualGrid in App verwenden**
+### **Schritt 3: App-Virtual.tsx erstellen**
 
-📁 **Datei:** `src/App.tsx`  
-📍 **Wo:** Zeile 1 (Imports)
+📁 **Neue Datei:** `src/App-Virtual.tsx`
 
-**Hinzufügen:**
+- Kopie von `App.tsx`
+- Verwendet immer `VirtualGrid` (keine Bedingung)
+- Titel: `{t("fear_greed_dashboard")} ({t("virtualized_list")})`
+
+---
+
+### **Schritt 4: Route und Navigation hinzufügen**
+
+📁 **Datei:** `src/AppRouter.tsx`
+
+**Import hinzufügen:**
 ```tsx
-import VirtualGrid from "./components/VirtualGrid";
+import AppVirtual from './App-Virtual';
 ```
 
-📍 **Wo:** Zeile ~157 (main Element)
-
-**Suche:**
+**Route hinzufügen:**
 ```tsx
-<main className="grid md:grid-cols-2 gap-4">
-  <div className="col-span-full text-sm text-zinc-500 dark:text-zinc-400">
-    {t("indices_found", { count: filtered.length })}
-  </div>
-  {filtered.map((i) => (
-    <IndexCard
-      key={i.id}
-      item={i}
-      onRemove={handleRemoveIndex}
-      range={range}
-      gauge={gauge}
-    />
-  ))}
-</main>
+<Route path="/virtual" element={<AppVirtual />} />
 ```
 
-**Ersetze durch:**
-```tsx
-<div className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">
-  {t("indices_found", { count: filtered.length })}
-</div>
+---
 
-{filtered.length > 50 ? (
-  <VirtualGrid
-    items={filtered}
-    onRemove={handleRemoveIndex}
-    range={range}
-    gauge={gauge}
-  />
-) : (
-  <main className="grid md:grid-cols-2 gap-4">
-    {filtered.map((i) => (
-      <IndexCard
-        key={i.id}
-        item={i}
-        onRemove={handleRemoveIndex}
-        range={range}
-        gauge={gauge}
-      />
-    ))}
-  </main>
-)}
+📁 **Datei:** `src/components/Navigation.tsx`
+
+**Tab hinzufügen:**
+```tsx
+<NavLink to="/virtual" style={getLinkStyle}>{t("virtualized_list")}</NavLink>
+```
+
+---
+
+📁 **Datei:** `src/i18n/config.ts`
+
+**Übersetzungen hinzufügen:**
+```tsx
+// Deutsch
+"virtualized_list": "Virtualisierte Liste",
+
+// English
+"virtualized_list": "Virtualized List",
 ```
 
 ---
 
 ### **Test:**
-- Füge 100+ Indizes hinzu (z.B. via CSV Import)
+- Navigiere zu `/virtual`
+- Füge viele Indizes hinzu (z.B. via CSV Import)
 - Scrolle in der Liste → butterweich
 - Öffne DevTools Elements → nur ~10 Cards im DOM sichtbar
 
@@ -566,7 +554,7 @@ import VirtualGrid from "./components/VirtualGrid";
 - [x] 9.1: IndexCard mit React.memo + useCallback für removeIndex
 - [x] 9.2: Barometer, GaugeRadial, Navigation, LanguageSwitcher mit React.memo
 - [x] 9.3: IndexDetail + NotFound lazy geladen mit Suspense
-- [ ] 9.4: VirtualGrid für Listen >50 Items
+- [x] 9.4: VirtualGrid für Listen >50 Items
 
 ---
 

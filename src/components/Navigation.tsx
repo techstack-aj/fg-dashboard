@@ -30,6 +30,8 @@ const Navigation: React.FC = () => {
       <NavLink to="/" style={getLinkStyle}>{t("original_dashboard")}</NavLink>
       <span style={{ color: '#ccc' }}>|</span>
       <NavLink to="/mui" style={getLinkStyle}>{t("mui_dashboard")}</NavLink>
+      <span style={{ color: '#ccc' }}>|</span>
+      <NavLink to="/virtual" style={getLinkStyle}>{t("virtualized_list")}</NavLink>
     </nav>
   );
 };
