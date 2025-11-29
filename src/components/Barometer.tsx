@@ -7,7 +7,7 @@ interface Props {
 }
 
 // SVG Gauge 0..100 mit farbigen Zonen
-export default function Barometer({ value, size = 160 }: Props) {
+const Barometer = function Barometer({ value, size = 160 }: Props) {
   const v = Math.max(0, Math.min(100, value));
   const angle = (-180 + (v / 100) * 180) * (Math.PI / 180);
   const r = size / 2 - 10;
@@ -69,4 +69,11 @@ export default function Barometer({ value, size = 160 }: Props) {
       </text>
     </svg>
   );
-}
+};
+
+export default React.memo(
+  Barometer,
+  (prevProps, nextProps) => {
+    return Math.abs(prevProps.value - nextProps.value) < 1;
+  }
+);

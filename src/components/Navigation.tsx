@@ -10,18 +10,18 @@ const Navigation: React.FC = () => {
     borderBottom: '1px solid #ccc',
     marginBottom: '1rem',
     display: 'flex',
-    justifyContent: 'center', // Zentriert die Links
-    gap: '1rem',              // Abstand zwischen Links
-    fontFamily: 'Arial, sans-serif',  // Einheitliche Schriftart erzwingen
-    fontSize: '16px',         // Einheitliche Schriftgröße
-    lineHeight: '1.5',        // Einheitliche Zeilenhöhe
-    letterSpacing: '0px'      // Einheitliche Laufweite
+    justifyContent: 'center',
+    gap: '1rem',
+    fontFamily: 'Arial, sans-serif',
+    fontSize: '16px',
+    lineHeight: '1.5',
+    letterSpacing: '0px'
   };
 
   const getLinkStyle = ({ isActive }: { isActive: boolean }): React.CSSProperties => ({
     textDecoration: isActive ? 'underline' : 'none',
     color: isActive ? '#1976d2' : '#666',
-    fontWeight: '500', // Immer gleiches Gewicht
+    fontWeight: '500',
     cursor: 'pointer'
   });
 
@@ -34,4 +34,4 @@ const Navigation: React.FC = () => {
   );
 };
 
-export default Navigation;
+export default React.memo(Navigation);

@@ -59,7 +59,7 @@ export default function IndexChart({ data, height = 220 }: Props) {
           margin={{ top: 10, right: 16, bottom: 0, left: 0 }}
         >
           <CartesianGrid strokeDasharray="3 3" opacity={0.2} strokeWidth={2} />
-          <XAxis dataKey="date" hide tick={{ fontSize: 12 }} />
+          <XAxis dataKey="date" hide interval={0} />
           <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} width={30} />
           <Tooltip content={<CustomTooltip />} />
           <Line type="monotone" dataKey="value" dot={false} strokeWidth={2} />

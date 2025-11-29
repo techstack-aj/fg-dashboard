@@ -12,7 +12,7 @@ interface Props {
 }
 
 // Recharts Radial Gauge 0..100
-export default function GaugeRadial({ value, height = 160 }: Props) {
+const GaugeRadial = function GaugeRadial({ value, height = 160 }: Props) {
   const v = Math.max(0, Math.min(100, value));
   const data = [
     {
@@ -43,4 +43,6 @@ export default function GaugeRadial({ value, height = 160 }: Props) {
       </div>
     </div>
   );
-}
+};
+
+export default React.memo(GaugeRadial);
